@@ -7,9 +7,21 @@ class OnboardingScreen extends StatelessWidget {
       Get.put(OnboardingController());
 
   final List<String> images = [
-    'images/slide1.png',
-    'images/slide1.png',
-    'images/slide1.png',
+    'images/slide11.png',
+    'images/slide2.png',
+    'images/slide32.png',
+  ];
+
+  final List<String> titles = [
+    'Welcome to Your \nPersonalized Health Companion',
+    'AI-Powered Health Assistant',
+    'Manage Your Appointments and Records',
+  ];
+
+  final List<String> descriptions = [
+    'Manage your healthcare effortlessly with us. Stay on top of appointments, access your medical records, and get the care you need—all in one app.',
+    'Our smart chatbot helps with booking appointments, answering health-related questions, and providing medication instructions.',
+    'Schedule appointments, view test results, and track your health with real-time notifications.',
   ];
 
   OnboardingScreen({super.key});
@@ -20,7 +32,8 @@ class OnboardingScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            Expanded(
+            const SizedBox(height: 40),
+            Flexible(
               child: PageView.builder(
                 controller: onboardingController.pageController,
                 onPageChanged: (index) {
@@ -33,19 +46,24 @@ class OnboardingScreen extends StatelessWidget {
                     children: [
                       Image.asset(
                         images[index],
-                        height: 300, // Adjust image size as needed
+                        height: 205, // Adjust image size as needed
                         fit: BoxFit.cover,
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 30),
                       Text(
-                        'Slide ${index + 1}',
-                        style: const TextStyle(fontSize: 24),
+                        titles[index], // Dynamic title
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 10),
-                      Text(
-                        'This is the description for slide ${index + 1}',
-                        style: const TextStyle(fontSize: 16),
-                        textAlign: TextAlign.center,
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Text(
+                          descriptions[index], // Dynamic description
+                          style: const TextStyle(fontSize: 13),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ],
                   );
@@ -74,11 +92,36 @@ class OnboardingScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: Row(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 50.0, horizontal: 20),
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   // Only show "Skip" button on the first two slides
+                  Obx(() {
+                    return onboardingController.currentIndex.value == 2
+                        ? SizedBox(
+                            width: 250,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // Navigate to the home page
+                                Get.offNamed('/home');
+                              },
+                              child: const Text('Get Started'),
+                            ),
+                          )
+                        : SizedBox(
+                            width: 250,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                onboardingController.nextPage();
+                              },
+                              child: const Text(
+                                'Next',
+                              ),
+                            ),
+                          );
+                  }),
                   Obx(() {
                     return onboardingController.currentIndex.value < 2
                         ? TextButton(
@@ -88,22 +131,6 @@ class OnboardingScreen extends StatelessWidget {
                             child: const Text('Skip'),
                           )
                         : const SizedBox(); // Empty widget on the last slide
-                  }),
-                  Obx(() {
-                    return onboardingController.currentIndex.value == 2
-                        ? ElevatedButton(
-                            onPressed: () {
-                              // Navigate to the home page
-                              Get.offNamed('/home');
-                            },
-                            child: const Text('Get Started'),
-                          )
-                        : TextButton(
-                            onPressed: () {
-                              onboardingController.nextPage();
-                            },
-                            child: const Text('Next'),
-                          );
                   }),
                 ],
               ),

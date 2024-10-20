@@ -18,8 +18,15 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Hospital App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 101, 154, 247)),
         useMaterial3: true,
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: const Color.fromARGB(255, 101, 154, 247),
+          ),
+        ),
       ),
       initialRoute: '/splash', // Set splash as the initial route
       getPages: [
