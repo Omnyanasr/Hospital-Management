@@ -15,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     // Delay for 3 seconds before navigating to the onboarding screen
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2, milliseconds: 3), () {
       Get.offNamed('/onboarding');
     });
   }
