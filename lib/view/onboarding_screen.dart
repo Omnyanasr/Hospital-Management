@@ -7,9 +7,9 @@ class OnboardingScreen extends StatelessWidget {
       Get.put(OnboardingController());
 
   final List<String> images = [
-    'images/slide11.png',
-    'images/slide2.png',
-    'images/slide32.png',
+    'assets/slide11.png',
+    'assets/slide2.png',
+    'assets/slide32.png',
   ];
 
   final List<String> titles = [
