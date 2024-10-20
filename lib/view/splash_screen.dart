@@ -15,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     // Delay for 3 seconds before navigating to the onboarding screen
-    Future.delayed(const Duration(seconds: 2, milliseconds: 3), () {
+    Future.delayed(const Duration(seconds: 2, milliseconds: 500), () {
       Get.offNamed('/onboarding');
     });
   }
@@ -25,7 +25,9 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Center(
         child: Lottie.asset(
-          'assets/animation.json',
+          'assets/pic.json',
+          height: 250,
+          width: 250
         ),
       ),
     );
