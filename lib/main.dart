@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hospital_managment_project/view/homepage.dart';
 import 'package:hospital_managment_project/view/onboarding_screen.dart';
+import 'package:hospital_managment_project/view/splash_screen.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -19,9 +21,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: '/',
+      initialRoute: '/splash', // Set splash as the initial route
       getPages: [
-        GetPage(name: '/', page: () => OnboardingScreen()),
+        GetPage(name: '/splash', page: () => const SplashScreen()),
+        GetPage(name: '/onboarding', page: () => OnboardingScreen()),
         GetPage(name: '/home', page: () => const HomePage()),
       ],
     );
