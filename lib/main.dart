@@ -59,7 +59,7 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
       ),
-      initialRoute: _currentUser == null ? '/login' : '/home', // Adjust initial route based on auth state
+      initialRoute:  '/splash',
       getPages: [
         GetPage(name: '/splash', page: () => const SplashScreen()),
         GetPage(name: '/onboarding', page: () => OnboardingScreen()),
