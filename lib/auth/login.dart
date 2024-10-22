@@ -1,9 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:hospital_managment_project/components/textformfield.dart';
 
 class Login extends StatelessWidget {
+  final TextEditingController email = TextEditingController();
+  final TextEditingController password = TextEditingController();
+
+  GlobalKey<FormState> formState = GlobalKey<FormState>();
+
+  Login({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,132 +20,200 @@ class Login extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Center(
           child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Sign in',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 50),
-                // Email TextField
-                TextFormField(
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.email_outlined),
-                    labelText: 'Email',
-                    hintText: 'Enter your email',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16),
-                // Password TextField
-                TextFormField(
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.lock_outline),
-                    suffixIcon: Icon(Icons.visibility_off),
-                    labelText: 'Password',
-                    hintText: 'Enter your password',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16),
-                // Remember me & Forgot Password Row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: false,
-                          onChanged: (value) {},
-                        ),
-                        Text('Remember me'),
-                      ],
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        // Forgot password logic here
-                      },
-                      child: Text('Forgot Password?'),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16),
-                // Sign in Button
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity, 50),  // Full width button
-                  ),
-                  onPressed: () {
-                    Get.offNamed('/home');
-                  },
-                  child: const Text(
+            child: Form(
+              key: formState,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
                     'Sign in',
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                SizedBox(height: 16),
-                const Text ("or"),
-                // Social Media Login Options
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 60, // Adjust width as needed
-                      height: 60, // Adjust height as needed
-                      child: IconButton(
-                        icon: Image.asset('assets/facebook.webp'), // Facebook icon
-                        iconSize: 60, // Adjust icon size
-                        onPressed: () {
-                          // Facebook login logic here
-                        },
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    SizedBox(
-                      width: 55,
-                      height: 55,
-                      child: IconButton(
-                        icon: Image.asset('assets/google.png'), // Google icon
-                        iconSize: 55,
-                        onPressed: () {
-                          // Google login logic here
-                      },
-                    ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16),
-                // Sign up Option
-                Text.rich(
-                  TextSpan(
-                    text: "Don't have an Account? ",
-                    style: TextStyle(color: Colors.grey),
+                  const SizedBox(height: 50),
+                  // Email TextField
+                  CustomTextForm(
+                    hintText: 'Enter your email',
+                    mycontroller: email,
+                    labelText: 'Email',
+                    icon: const Icon(Icons.email_outlined),
+                    validator: (val) {
+                      if (val == "") {
+                        return "Can't be Empty";
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  // Password TextField
+                  CustomTextForm(
+                      hintText: 'Enter your password',
+                      mycontroller: password,
+                      labelText: 'Password',
+                      icon: const Icon(Icons.lock_outline),
+                      suffixIcon: const Icon(Icons.visibility_off),
+                      obscureText: true,
+                      validator: (val) {
+                        if (val == "") {
+                          return "Can't be Empty";
+                        }
+                      }),
+                  const SizedBox(height: 16),
+                  // Remember me & Forgot Password Row
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      TextSpan(
-                        text: 'Sign up',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          decoration: TextDecoration.underline,
-                        ),
-                        // Sign up logic
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            Get.offNamed('/signup');
-                          },
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: false,
+                            onChanged: (value) {},
+                          ),
+                          const Text('Remember me'),
+                        ],
+                      ),
+                      // Note: Removed Forgot Password for now
+                      TextButton(
+                        onPressed: () {
+                          // Forgot password logic here
+                        },
+                        child: const Text('Forgot Password?'),
                       ),
                     ],
                   ),
-                ),
-              ],
+                  const SizedBox(height: 16),
+                  // Sign in Button
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize:
+                          const Size(double.infinity, 50), // Full width button
+                    ),
+                    onPressed: () async {
+                      if (formState.currentState!.validate()) {
+                        // Show "Logging in" message
+                        Get.snackbar(
+                          'Logging in',
+                          'Please wait...',
+                          snackPosition: SnackPosition.BOTTOM,
+                          duration: Duration(seconds: 2),
+                          showProgressIndicator: true,
+                        );
+
+                        // Capture the necessary data before async
+                        String emailText = email.text;
+                        String passwordText = password.text;
+
+                        try {
+                          final credential = await FirebaseAuth.instance
+                              .signInWithEmailAndPassword(
+                                  email: emailText, password: passwordText);
+
+                          // Navigate to the home screen after successful login
+                          Get.offNamed('/home');
+                        } on FirebaseAuthException catch (e) {
+                          // Debugging: Print the error code
+                          print("Error Code: ${e.code}");
+
+                          if (e.code == 'user-not-found') {
+                            Get.snackbar(
+                              'Error',
+                              'No user found for that email.',
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                            );
+                          } else if (e.code == 'wrong-password') {
+                            Get.snackbar(
+                              'Error',
+                              'Wrong password provided for that user.',
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                            );
+                          } else {
+                            Get.snackbar(
+                              'Error',
+                              'Something went wrong. Please try again later.',
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                            );
+                          }
+                        } catch (e) {
+                          // General error handling
+                          Get.snackbar(
+                            'Error',
+                            'Something went wrong. Please try again later.',
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.red,
+                            colorText: Colors.white,
+                          );
+                        }
+                      } else {
+                        print("Not Valid");
+                      }
+                    },
+                    child: const Text(
+                      'Sign in',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text("or"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 60, // Adjust width as needed
+                        height: 60, // Adjust height as needed
+                        child: IconButton(
+                          icon: Image.asset(
+                              'assets/facebook.webp'), // Facebook icon
+                          iconSize: 60, // Adjust icon size
+                          onPressed: () {
+                            // Facebook login logic here
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      SizedBox(
+                        width: 55,
+                        height: 55,
+                        child: IconButton(
+                          icon: Image.asset('assets/google.png'), // Google icon
+                          iconSize: 55,
+                          onPressed: () {
+                            // Google login logic here
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  // Sign up Option
+                  Text.rich(
+                    TextSpan(
+                      text: "Don't have an Account? ",
+                      style: const TextStyle(color: Colors.grey),
+                      children: [
+                        TextSpan(
+                          text: 'Sign up',
+                          style: const TextStyle(
+                            color: Colors.blue,
+                            decoration: TextDecoration.underline,
+                          ),
+                          // Sign up logic
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Get.offNamed('/signup');
+                            },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

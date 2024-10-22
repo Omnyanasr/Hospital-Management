@@ -47,6 +47,7 @@ dependencies:
   firebase_auth: ^4.17.8
   google_sign_in: ^6.2.1
   firebase_analytics: ^10.8.9
+  awesome_dialog: ^3.2.1
 
 dev_dependencies:
   flutter_test:

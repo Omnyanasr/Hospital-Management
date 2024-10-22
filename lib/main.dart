@@ -8,7 +8,6 @@ import 'package:hospital_managment_project/view/splash_screen.dart';
 import 'package:hospital_managment_project/auth/login.dart';
 import 'package:hospital_managment_project/auth/signup.dart';
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -59,12 +58,14 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
       ),
-      initialRoute: _currentUser == null ? '/login' : '/home', // Adjust initial route based on auth state
+      initialRoute: _currentUser == null
+          ? '/login'
+          : '/home', // Adjust initial route based on auth state
       getPages: [
         GetPage(name: '/splash', page: () => const SplashScreen()),
         GetPage(name: '/onboarding', page: () => OnboardingScreen()),
         GetPage(name: '/login', page: () => Login()),
-        GetPage(name: '/signup', page: () => Signup()),
+        GetPage(name: '/signup', page: () => SignUp()),
         GetPage(name: '/home', page: () => const HomePage()), // HomePage route
       ],
     );
