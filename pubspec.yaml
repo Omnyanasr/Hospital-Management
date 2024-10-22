@@ -77,6 +77,9 @@ flutter:
      - assets/slide2.png
      - assets/slide32.png
      - assets/slide11.png
+     - assets/facebook.webp
+     - assets/google.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

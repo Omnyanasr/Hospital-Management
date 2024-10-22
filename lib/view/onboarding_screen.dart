@@ -105,7 +105,7 @@ class OnboardingScreen extends StatelessWidget {
                             child: ElevatedButton(
                               onPressed: () {
                                 // Navigate to the home page
-                                Get.offNamed('/home');
+                                Get.offNamed('/login');
                               },
                               child: const Text('Get Started'),
                             ),
