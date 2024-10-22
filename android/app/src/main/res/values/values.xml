@@ -1,0 +1,9 @@
+<resources>
+    <string name="default_web_client_id">1:957343334423:android:7c213b14469ed5efea5c52</string>
+    <string name="firebase_database_url">https://hospital-management-cb3cd.firebaseio.com/</string>
+    <string name="ga_trackingId"></string>
+    <string name="gcm_defaultSenderId">957343334423</string>
+    <string name="google_api_key">AIzaSyCX9hjeIaBF9dk5OnpCVdQ38AJs_MWRpJQ</string>
+    <string name="google_app_id">1:957343334423:android:7c213b14469ed5efea5c52</string>
+    <string name="project_id">hospital-management-cb3cd</string>
+</resources>

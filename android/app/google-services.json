@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "957343334423",
+    "project_id": "hospital-management-cb3cd",
+    "storage_bucket": "hospital-management-cb3cd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:957343334423:android:7c213b14469ed5efea5c52",
+        "android_client_info": {
+          "package_name": "com.example.hospital_managment_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCX9hjeIaBF9dk5OnpCVdQ38AJs_MWRpJQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
