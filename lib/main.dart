@@ -5,9 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth
 import 'package:hospital_managment_project/view/homepage.dart';
 import 'package:hospital_managment_project/view/onboarding_screen.dart';
 import 'package:hospital_managment_project/view/splash_screen.dart';
-import 'package:hospital_managment_project/auth/login.dart';
-import 'package:hospital_managment_project/auth/signup.dart';
-
+import 'package:hospital_managment_project/view/auth/login.dart';
+import 'package:hospital_managment_project/view/auth/signup.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,12 +58,12 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
       ),
-      initialRoute:  '/splash',
+      initialRoute: '/splash',
       getPages: [
         GetPage(name: '/splash', page: () => const SplashScreen()),
         GetPage(name: '/onboarding', page: () => OnboardingScreen()),
         GetPage(name: '/login', page: () => Login()),
-        GetPage(name: '/signup', page: () => Signup()),
+        GetPage(name: '/signup', page: () => SignUp()),
         GetPage(name: '/home', page: () => const HomePage()), // HomePage route
       ],
     );
