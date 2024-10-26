@@ -110,7 +110,17 @@ class Login extends StatelessWidget {
                                   email: emailText, password: passwordText);
 
                           // Navigate to the home screen after successful login
-                          Get.offNamed('/home');
+                          if(credential.user!.emailVerified){
+                            Get.offNamed('/home');
+                          }else{
+                            Get.snackbar(
+                              'Error',
+                              'Verify your email.',
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                            );
+                          }
                         } on FirebaseAuthException catch (e) {
                           // Debugging: Print the error code
                           print("Error Code: ${e.code}");

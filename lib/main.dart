@@ -59,6 +59,10 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       initialRoute: '/splash',
+      home: (FirebaseAuth.instance.currentUser != null &&
+          FirebaseAuth.instance.currentUser!.emailVerified)
+          ? const HomePage()
+          : Login(),
       getPages: [
         GetPage(name: '/splash', page: () => const SplashScreen()),
         GetPage(name: '/onboarding', page: () => OnboardingScreen()),

@@ -111,7 +111,10 @@ class SignUp extends StatelessWidget {
                             email: email.text,
                             password: password.text,
                           );
-                          Get.offNamed('/home');
+                          FirebaseAuth.instance.currentUser!.sendEmailVerification();
+                          // Navigate to the login screen after successful sign-up
+                          Get.offNamed('/login');
+
                           Get.snackbar(
                             'Success',
                             'Account created successfully.',
@@ -138,6 +141,7 @@ class SignUp extends StatelessWidget {
                             );
                           }
                         } catch (e) {
+                          print('Error: $e');
                           Get.snackbar(
                             'Error',
                             'Something went wrong. Please try again later.',
