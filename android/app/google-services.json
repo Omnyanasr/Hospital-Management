@@ -12,7 +12,28 @@
           "package_name": "com.example.hospital_managment_project"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "957343334423-1feirikd9k8fdfm5r9dfcpe7a20phtvn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hospital_managment_project",
+            "certificate_hash": "25740ce6d27d42d4e99570b89c9526859ecaa8e4"
+          }
+        },
+        {
+          "client_id": "957343334423-g20msgd9rbhnq2tjm0spqejv32r75s9q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hospital_managment_project",
+            "certificate_hash": "68c40d77dc86573f804115737ea7b761d12f7e36"
+          }
+        },
+        {
+          "client_id": "957343334423-qiaagcni1j9c9rg7er09qrlt94vea2ik.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCX9hjeIaBF9dk5OnpCVdQ38AJs_MWRpJQ"
@@ -20,7 +41,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "957343334423-qiaagcni1j9c9rg7er09qrlt94vea2ik.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
