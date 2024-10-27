@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:hospital_managment_project/components/textformfield.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-
 class Login extends StatelessWidget {
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
@@ -25,7 +24,8 @@ class Login extends StatelessWidget {
       }
 
       // Obtain the auth details from the request
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       // Create a new credential
       final credential = GoogleAuthProvider.credential(
@@ -40,14 +40,13 @@ class Login extends StatelessWidget {
       print("Error signing in with Google: $error");
       Get.snackbar(
         'Error',
-        'Failed to sign in with Google: $error',
+        'Failed to sign in with Google',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -147,9 +146,9 @@ class Login extends StatelessWidget {
                                   email: emailText, password: passwordText);
 
                           // Navigate to the home screen after successful login
-                          if(credential.user!.emailVerified){
+                          if (credential.user!.emailVerified) {
                             Get.offNamed('/home');
-                          }else{
+                          } else {
                             Get.snackbar(
                               'Error',
                               'Verify your email.',

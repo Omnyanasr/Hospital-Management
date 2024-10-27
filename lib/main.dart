@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hospital_managment_project/view/homepage.dart';
 import 'package:hospital_managment_project/view/onboarding_screen.dart';
 import 'package:hospital_managment_project/view/splash_screen.dart';
@@ -50,6 +51,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
             seedColor: const Color.fromARGB(255, 101, 154, 247)),
+        textTheme: GoogleFonts.poppinsTextTheme(),
         useMaterial3: true,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
@@ -60,15 +62,15 @@ class _MyAppState extends State<MyApp> {
       ),
       initialRoute: '/splash',
       home: (FirebaseAuth.instance.currentUser != null &&
-          FirebaseAuth.instance.currentUser!.emailVerified)
-          ? const HomePage()
+              FirebaseAuth.instance.currentUser!.emailVerified)
+          ? HomePage()
           : Login(),
       getPages: [
         GetPage(name: '/splash', page: () => const SplashScreen()),
         GetPage(name: '/onboarding', page: () => OnboardingScreen()),
         GetPage(name: '/login', page: () => Login()),
         GetPage(name: '/signup', page: () => SignUp()),
-        GetPage(name: '/home', page: () => const HomePage()), // HomePage route
+        GetPage(name: '/home', page: () => HomePage()), // HomePage route
       ],
     );
   }

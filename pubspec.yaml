@@ -48,6 +48,7 @@ dependencies:
   google_sign_in: ^6.2.1
   firebase_analytics: ^10.8.9
   flutter_facebook_auth: ^3.5.0
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -80,6 +81,7 @@ flutter:
      - assets/slide11.png
      - assets/facebook.webp
      - assets/google.png
+     - assets/doctor.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
