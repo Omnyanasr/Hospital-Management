@@ -82,6 +82,10 @@ flutter:
      - assets/facebook.webp
      - assets/google.png
      - assets/doctor.png
+     - assets/robot.png
+     - assets/roboth.png
+     - assets/robothp.png
+     - assets/homebg.jpg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

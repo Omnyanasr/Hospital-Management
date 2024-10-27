@@ -51,13 +51,19 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
             seedColor: const Color.fromARGB(255, 101, 154, 247)),
-        textTheme: GoogleFonts.poppinsTextTheme(),
+        //textTheme: GoogleFonts.openSansTextTheme(),
         useMaterial3: true,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
             backgroundColor: const Color.fromARGB(255, 101, 154, 247),
           ),
+        ),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          // Set the color for selected and unselected icons and labels
+          selectedItemColor:
+              Color.fromARGB(255, 101, 154, 247), // Selected icon color
+          unselectedItemColor: Colors.grey, // Unselected icon color
         ),
       ),
       initialRoute: '/splash',

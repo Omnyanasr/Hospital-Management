@@ -147,7 +147,7 @@ class Login extends StatelessWidget {
 
                           // Navigate to the home screen after successful login
                           if (credential.user!.emailVerified) {
-                            Get.offNamed('/home');
+                            Get.offAllNamed('/home');
                           } else {
                             Get.snackbar(
                               'Error',
