@@ -34,7 +34,7 @@ class HomePage extends StatelessWidget {
               IconButton(
                 onPressed: () async {
                   GoogleSignIn googleSignIn = GoogleSignIn();
-                  googleSignIn.disconnect();
+                  await googleSignIn.disconnect();
                   await FirebaseAuth.instance.signOut();
                   Get.offNamed('/login');
                 },
@@ -56,11 +56,8 @@ class HomePage extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   image: const DecorationImage(
-                    //opacity: 30,
-                    image: AssetImage(
-                        'assets/homebg.jpg'), // Set your background image here
-                    fit: BoxFit
-                        .cover, // Adjusts the image to cover the entire container
+                    image: AssetImage('assets/homebg.jpg'),
+                    fit: BoxFit.cover,
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -113,7 +110,6 @@ class HomePage extends StatelessWidget {
                               ),
                             ),
                           ),
-                          //const SizedBox(height: 5),
                           GestureDetector(
                             onTap: () {
                               // Navigate to the x-ray chatbot page
@@ -167,6 +163,7 @@ class HomePage extends StatelessWidget {
               const Text("Doctors Available",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
+              // Updated DoctorsAvailable widget with selection functionality
               DoctorsAvailable(),
             ],
           ),

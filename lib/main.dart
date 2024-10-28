@@ -8,6 +8,8 @@ import 'package:hospital_managment_project/view/onboarding_screen.dart';
 import 'package:hospital_managment_project/view/splash_screen.dart';
 import 'package:hospital_managment_project/view/auth/login.dart';
 import 'package:hospital_managment_project/view/auth/signup.dart';
+import 'package:hospital_managment_project/view/pages/appointmentpage.dart'; // Import your appointment page
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -76,7 +78,8 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: '/onboarding', page: () => OnboardingScreen()),
         GetPage(name: '/login', page: () => Login()),
         GetPage(name: '/signup', page: () => SignUp()),
-        GetPage(name: '/home', page: () => HomePage()), // HomePage route
+        GetPage(name: '/home', page: () => HomePage()),
+        GetPage(name: '/appointment', page: () => AppointmentPage()),
       ],
     );
   }
