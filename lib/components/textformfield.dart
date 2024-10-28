@@ -9,7 +9,9 @@ class CustomTextForm extends StatelessWidget {
   final bool obscureText;
   final String? Function(String?)?
       validator; // New parameter to control text obscuring
-  final TextStyle? hintStyle; // New parameter for hint text style
+  final TextStyle? hintStyle;
+  final TextInputType? keyboardType;
+  final int? maxLines; // New parameter for hint text style
 
   const CustomTextForm({
     super.key,
@@ -20,7 +22,9 @@ class CustomTextForm extends StatelessWidget {
     this.suffixIcon, // Make suffixIcon optional
     this.obscureText = false,
     required this.validator, // Default is not obscure
-    this.hintStyle, // Optional hintStyle
+    this.hintStyle,
+    this.keyboardType,
+    this.maxLines,
   });
 
   @override
@@ -28,6 +32,8 @@ class CustomTextForm extends StatelessWidget {
     return TextFormField(
       validator: validator,
       controller: mycontroller,
+      keyboardType: keyboardType,
+      maxLines: maxLines,
       obscureText: obscureText, // Use the new parameter here
       decoration: InputDecoration(
         prefixIcon: icon,

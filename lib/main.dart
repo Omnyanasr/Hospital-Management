@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hospital_managment_project/controller/profile_controller.dart';
+import 'package:hospital_managment_project/view/feedback_support_page.dart';
 import 'package:hospital_managment_project/view/homepage.dart';
 import 'package:hospital_managment_project/view/onboarding_screen.dart';
 import 'package:hospital_managment_project/view/account/patient_profile_page.dart';
@@ -89,6 +90,7 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: '/profile', page: () => PatientProfilePage()),
         GetPage(name: '/symptom', page: () => SymptomCheckerPage()),
         GetPage(name: '/xray', page: () => XRayAnalyzerPage()),
+        GetPage(name: '/feedback', page: () => FeedbackSupportPage()),
         GetPage(
             name: '/info',
             page: () => AccountInformationPage()), // HomePage route
