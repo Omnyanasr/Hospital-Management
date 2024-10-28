@@ -79,6 +79,7 @@ class Login extends StatelessWidget {
                       if (val == "") {
                         return "Can't be Empty";
                       }
+                      return null;
                     },
                   ),
                   const SizedBox(height: 16),
@@ -94,6 +95,7 @@ class Login extends StatelessWidget {
                         if (val == "") {
                           return "Can't be Empty";
                         }
+                        return null;
                       }),
                   const SizedBox(height: 16),
                   // Remember me & Forgot Password Row
@@ -132,7 +134,7 @@ class Login extends StatelessWidget {
                           'Logging in',
                           'Please wait...',
                           snackPosition: SnackPosition.BOTTOM,
-                          duration: Duration(seconds: 2),
+                          duration: const Duration(seconds: 2),
                           showProgressIndicator: true,
                         );
 

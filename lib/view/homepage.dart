@@ -65,7 +65,6 @@ class HomeScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: AppBar(
-            automaticallyImplyLeading: false,
             backgroundColor: Colors.transparent,
             elevation: 0,
             title: Text(
@@ -215,6 +214,7 @@ class HomeScreen extends StatelessWidget {
               const Text("Doctors Available",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
+              // Updated DoctorsAvailable widget with selection functionality
               DoctorsAvailable(),
             ],
           ),

@@ -45,6 +45,7 @@ class SignUp extends StatelessWidget {
                         if (val == "") {
                           return "Can't be Empty";
                         }
+                        return null;
                       }),
                   const SizedBox(height: 16),
                   // Password TextField
@@ -59,6 +60,7 @@ class SignUp extends StatelessWidget {
                         if (val == "") {
                           return "Can't be Empty";
                         }
+                        return null;
                       }),
                   const SizedBox(height: 16),
                   // Confirm Password TextField
@@ -73,6 +75,7 @@ class SignUp extends StatelessWidget {
                         if (val == "") {
                           return "Can't be Empty";
                         }
+                        return null;
                       }),
                   const SizedBox(height: 16),
                   // Phone Number TextField
@@ -85,6 +88,7 @@ class SignUp extends StatelessWidget {
                         if (val == "") {
                           return "Can't be Empty";
                         }
+                        return null;
                       }),
                   const SizedBox(height: 30),
                   // Sign up Button
