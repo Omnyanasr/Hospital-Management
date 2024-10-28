@@ -42,8 +42,8 @@ class _AppointmentPageState extends State<AppointmentPage> {
             Row(
               children: [
                 Container(
-                  width: 140,
-                  height: 150,
+                  width: 90,
+                  height: 90,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8), // Square shape with rounded corners
                     image: DecorationImage(
@@ -66,7 +66,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
             SizedBox(height: 20),
             Text("Biography", style: TextStyle(fontWeight: FontWeight.bold)),
             Text("Doctor's biography and background \ninformation goes here."),
-            SizedBox(height: 30),
+            SizedBox(height: 20),
             // Date selection
             Text("Select Date", style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
@@ -106,42 +106,45 @@ class _AppointmentPageState extends State<AppointmentPage> {
                 },
               ),
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 20),
             // Time selection
             Text("Select Time", style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
-            Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 20, // Horizontal spacing between buttons
-              runSpacing: 10, // Vertical spacing between rows
-              children: availableTimes
-                  .asMap()
-                  .entries
-                  .map((entry) => GestureDetector(
-                onTap: () {
-                  setState(() {
-                    selectedTimeIndex = entry.key;
-                  });
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: selectedTimeIndex == entry.key
-                        ? const Color.fromARGB(255, 101, 154, 247)
-                        : Colors.grey[200],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    entry.value,
-                    style: TextStyle(
-                      color: selectedTimeIndex == entry.key ? Colors.white : Colors.black,
+            Container(
+              height: 60,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: availableTimes.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedTimeIndex = index;
+                      });
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      margin: EdgeInsets.only(right: 20),
+                      decoration: BoxDecoration(
+                        color: selectedTimeIndex == index
+                            ? const Color.fromARGB(255, 101, 154, 247)
+                            : Colors.grey[200],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Center(
+                        child: Text(
+                          availableTimes[index],
+                          style: TextStyle(
+                            color: selectedTimeIndex == index ? Colors.white : Colors.black,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ))
-                  .toList(),
+                  );
+                },
+              ),
             ),
-            SizedBox(height: 50),
+            SizedBox(height: 30),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
