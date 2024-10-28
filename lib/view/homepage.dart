@@ -7,8 +7,6 @@ import 'package:hospital_managment_project/components/doctors_available.dart';
 import 'package:hospital_managment_project/components/treatment_row.dart';
 import 'package:hospital_managment_project/controller/profile_controller.dart';
 import 'package:hospital_managment_project/view/account/patient_profile_page.dart';
-import 'package:hospital_managment_project/view/pages/symptom_chatbot_page.dart';
-import 'package:hospital_managment_project/view/search_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -19,25 +17,65 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0; // Current index of the BottomNavigationBar
   final List<Widget> _pages = [
     HomeScreen(),
-    SymptomChatbotPage(),
+    Container(), // Placeholder for Chatbot dropdown
     PatientProfilePage(),
   ];
 
+  // Method to display the chatbot options dropdown
+  void _showChatbotOptions(BuildContext context) {
+    showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(50, 600, 50, 0), // Adjust for positioning
+      items: [
+        PopupMenuItem(
+          child: ListTile(
+            leading: Icon(Icons.medical_services, color: Colors.blue),
+            title: Text("Symptom Checker"),
+            onTap: () {
+              Navigator.pop(context); // Close the menu
+              Get.toNamed('/symptom');
+            },
+          ),
+        ),
+        PopupMenuItem(
+          child: ListTile(
+            leading: Icon(Icons.image_search, color: Colors.blue),
+            title: Text("X-ray Analyzer"),
+            onTap: () {
+              Navigator.pop(context); // Close the menu
+              Get.toNamed('/xray');
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
   void _onItemTapped(int index) {
-    setState(() {
-      _currentIndex = index; // Update current index
-    });
+    if (index == 1) {
+      // Show the chatbot options when the chatbot item is tapped
+      _showChatbotOptions(context);
+    } else {
+      setState(() {
+        _currentIndex = index; // Update current index for other pages
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_currentIndex], // Display the selected page
+      body: _currentIndex == 1
+          ? _pages[0]
+          : _pages[_currentIndex], // Display the selected page
       bottomNavigationBar: BottomNavigationBar(
-        items: const [
+        items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
+            icon: GestureDetector(
+              onTap: () => _showChatbotOptions(context), // Show menu on tap
+              child: Icon(Icons.chat),
+            ),
             label: "Chatbot",
           ),
           BottomNavigationBarItem(
@@ -65,6 +103,7 @@ class HomeScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: AppBar(
+            automaticallyImplyLeading: false,
             backgroundColor: Colors.transparent,
             elevation: 0,
             title: Text(
@@ -105,10 +144,8 @@ class HomeScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   image: const DecorationImage(
-                    image: AssetImage(
-                        'assets/homebg.jpg'), // Set your background image here
-                    fit: BoxFit
-                        .cover, // Adjusts the image to cover the entire container
+                    image: AssetImage('assets/homebg.jpg'),
+                    fit: BoxFit.cover,
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -121,7 +158,6 @@ class HomeScreen extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    // Column with Chatbot options
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,8 +172,7 @@ class HomeScreen extends StatelessWidget {
                           const SizedBox(height: 15),
                           GestureDetector(
                             onTap: () {
-                              // Navigate to the symptom chatbot page
-                              Get.toNamed('/symptom-chatbot');
+                              Get.toNamed('/symptom');
                             },
                             child: Card(
                               color: Colors.blue[100],
@@ -163,8 +198,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                           GestureDetector(
                             onTap: () {
-                              // Navigate to the x-ray chatbot page
-                              Get.toNamed('/xray-chatbot');
+                              Get.toNamed('/xray');
                             },
                             child: Card(
                               color: Colors.blue[100],
@@ -214,7 +248,6 @@ class HomeScreen extends StatelessWidget {
               const Text("Doctors Available",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
-              // Updated DoctorsAvailable widget with selection functionality
               DoctorsAvailable(),
             ],
           ),

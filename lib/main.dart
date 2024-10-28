@@ -8,11 +8,12 @@ import 'package:hospital_managment_project/view/homepage.dart';
 import 'package:hospital_managment_project/view/onboarding_screen.dart';
 import 'package:hospital_managment_project/view/account/patient_profile_page.dart';
 import 'package:hospital_managment_project/view/account/account_info.dart';
+import 'package:hospital_managment_project/view/pages/symptom_chatbot_page.dart';
+import 'package:hospital_managment_project/view/pages/xray_chatbot_page.dart';
 import 'package:hospital_managment_project/view/splash_screen.dart';
 import 'package:hospital_managment_project/view/auth/login.dart';
 import 'package:hospital_managment_project/view/auth/signup.dart';
 import 'package:hospital_managment_project/view/pages/appointmentpage.dart'; // Import your appointment page
-
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -72,7 +73,7 @@ class _MyAppState extends State<MyApp> {
           unselectedItemColor: Colors.grey, // Unselected icon color
         ),
       ),
-      initialRoute: '/splash',
+      initialRoute: '/home',
       home: (FirebaseAuth.instance.currentUser != null &&
               FirebaseAuth.instance.currentUser!.emailVerified)
           ? HomePage()
@@ -86,6 +87,8 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: '/appointment', page: () => AppointmentPage()),
         GetPage(name: '/home', page: () => HomePage()),
         GetPage(name: '/profile', page: () => PatientProfilePage()),
+        GetPage(name: '/symptom', page: () => SymptomCheckerPage()),
+        GetPage(name: '/xray', page: () => XRayAnalyzerPage()),
         GetPage(
             name: '/info',
             page: () => AccountInformationPage()), // HomePage route

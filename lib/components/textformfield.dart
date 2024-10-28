@@ -9,6 +9,7 @@ class CustomTextForm extends StatelessWidget {
   final bool obscureText;
   final String? Function(String?)?
       validator; // New parameter to control text obscuring
+  final TextStyle? hintStyle; // New parameter for hint text style
 
   const CustomTextForm({
     super.key,
@@ -19,6 +20,7 @@ class CustomTextForm extends StatelessWidget {
     this.suffixIcon, // Make suffixIcon optional
     this.obscureText = false,
     required this.validator, // Default is not obscure
+    this.hintStyle, // Optional hintStyle
   });
 
   @override
@@ -32,6 +34,8 @@ class CustomTextForm extends StatelessWidget {
         suffixIcon: suffixIcon, // Optional suffixIcon
         labelText: labelText,
         hintText: hintText,
+        hintStyle: hintStyle ??
+            const TextStyle(color: Colors.grey), // Default hint style
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),

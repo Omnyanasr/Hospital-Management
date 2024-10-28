@@ -65,8 +65,8 @@ class PatientProfilePage extends StatelessWidget {
             },
           ),
           _buildProfileOption(
-            icon: Icons.help,
-            title: 'Help',
+            icon: Icons.feedback,
+            title: 'Feedback And Support',
             onTap: () {
               // Implement navigation or action for Help
             },
