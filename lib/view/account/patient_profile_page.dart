@@ -1,12 +1,12 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hospital_managment_project/controller/profile_controller.dart';
 
 class PatientProfilePage extends StatelessWidget {
-  // Use Get.put to initialize the controller
   final ProfileController controller = Get.find<ProfileController>();
 
-  PatientProfilePage({super.key}); // Constructor with key
+  PatientProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,19 +19,30 @@ class PatientProfilePage extends StatelessWidget {
       body: Column(
         children: [
           const SizedBox(height: 20),
-          const CircleAvatar(
-            radius: 50,
-            backgroundImage: AssetImage(
-                'assets/account.png'), // Replace with actual path or network image
-          ),
+          Obx(() {
+            ImageProvider<Object> profileImageProvider;
+
+            if (controller.profileImagePath.value.isNotEmpty &&
+                File(controller.profileImagePath.value).existsSync()) {
+              profileImageProvider =
+                  FileImage(File(controller.profileImagePath.value));
+            } else {
+              profileImageProvider = const AssetImage('assets/account.png');
+            }
+
+            return CircleAvatar(
+              radius: 50,
+              backgroundImage: profileImageProvider,
+              backgroundColor: Colors.blue[100],
+            );
+          }),
           const SizedBox(height: 10),
           Obx(() => Text(
-                controller.name.value, // Use the controller's observable value
+                controller.name.value,
                 style:
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               )),
           const SizedBox(height: 30),
-          // Add profile options
           _buildProfileOption(
             icon: Icons.person,
             title: 'Personal Details',
@@ -79,7 +90,6 @@ class PatientProfilePage extends StatelessWidget {
     );
   }
 
-  // Reusable widget for profile options
   Widget _buildProfileOption({
     required IconData icon,
     required String title,

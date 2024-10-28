@@ -10,6 +10,11 @@ class ProfileController extends GetxController {
   var bloodType = 'AB'.obs;
   var allergies = 'None'.obs;
   var chronicConditions = 'None'.obs;
+  var profileImagePath = ''.obs;
+
+  void updateProfileImage(String newPath) {
+    profileImagePath.value = newPath;
+  }
 
   void updateProfile(
       String newName,
@@ -29,6 +34,8 @@ class ProfileController extends GetxController {
     allergies.value = newAllergies;
     chronicConditions.value = newChronicConditions;
 
-    // Here, you can also add logic to save the changes to a database or an API.
+    // Add logic here to save data to a database or API
+    // For example, you could call an API to save the data
+    print("Profile saved: Name: $newName, Image Path: $profileImagePath");
   }
 }

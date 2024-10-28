@@ -1,13 +1,22 @@
+import 'dart:io'; // Import for File
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hospital_managment_project/controller/profile_controller.dart';
+import 'package:image_picker/image_picker.dart'; // Import image_picker
 
 class AccountInformationPage extends StatelessWidget {
   final ProfileController controller = Get.find<ProfileController>();
+  final ImagePicker _picker = ImagePicker(); // Initialize the ImagePicker
 
   AccountInformationPage({super.key});
 
-  // Accept the controller through the constructor
+  Future<void> _pickImage() async {
+    // Show an image picker dialog
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      controller.profileImagePath.value = image.path; // Update the image path
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +38,18 @@ class AccountInformationPage extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: const AssetImage("assets/account.png"),
-              backgroundColor: Colors.blue[100],
+            GestureDetector(
+              // Wrap CircleAvatar in GestureDetector
+              onTap: _pickImage, // Handle the tap
+              child: Obx(() => CircleAvatar(
+                    radius: 50,
+                    backgroundImage:
+                        controller.profileImagePath.value.isNotEmpty
+                            ? FileImage(File(controller.profileImagePath.value))
+                                as ImageProvider<Object>
+                            : const AssetImage('assets/account.png')
+                                as ImageProvider<Object>,
+                  )),
             ),
             const SizedBox(height: 20),
             ProfileInputField(
