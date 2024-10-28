@@ -73,7 +73,7 @@ class _MyAppState extends State<MyApp> {
           unselectedItemColor: Colors.grey, // Unselected icon color
         ),
       ),
-      initialRoute: '/home',
+      initialRoute: '/splash',
       home: (FirebaseAuth.instance.currentUser != null &&
               FirebaseAuth.instance.currentUser!.emailVerified)
           ? HomePage()
