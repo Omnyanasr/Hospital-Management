@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hospital_managment_project/controller/profile_controller.dart';
 import 'package:hospital_managment_project/view/homepage.dart';
 import 'package:hospital_managment_project/view/onboarding_screen.dart';
+import 'package:hospital_managment_project/view/account/patient_profile_page.dart';
+import 'package:hospital_managment_project/view/account/account_info.dart';
 import 'package:hospital_managment_project/view/splash_screen.dart';
 import 'package:hospital_managment_project/view/auth/login.dart';
 import 'package:hospital_managment_project/view/auth/signup.dart';
@@ -12,6 +15,7 @@ import 'package:hospital_managment_project/view/auth/signup.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  Get.put(ProfileController());
   runApp(const MyApp());
 }
 
@@ -66,7 +70,7 @@ class _MyAppState extends State<MyApp> {
           unselectedItemColor: Colors.grey, // Unselected icon color
         ),
       ),
-      initialRoute: '/splash',
+      initialRoute: '/home',
       home: (FirebaseAuth.instance.currentUser != null &&
               FirebaseAuth.instance.currentUser!.emailVerified)
           ? HomePage()
@@ -76,7 +80,11 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: '/onboarding', page: () => OnboardingScreen()),
         GetPage(name: '/login', page: () => Login()),
         GetPage(name: '/signup', page: () => SignUp()),
-        GetPage(name: '/home', page: () => HomePage()), // HomePage route
+        GetPage(name: '/home', page: () => HomePage()),
+        GetPage(name: '/profile', page: () => PatientProfilePage()),
+        GetPage(
+            name: '/info',
+            page: () => AccountInformationPage()), // HomePage route
       ],
     );
   }

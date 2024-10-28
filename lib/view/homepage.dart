@@ -5,8 +5,57 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hospital_managment_project/components/appointment_card.dart';
 import 'package:hospital_managment_project/components/doctors_available.dart';
 import 'package:hospital_managment_project/components/treatment_row.dart';
+import 'package:hospital_managment_project/controller/profile_controller.dart';
+import 'package:hospital_managment_project/view/account/patient_profile_page.dart';
+import 'package:hospital_managment_project/view/pages/symptom_chatbot_page.dart';
+import 'package:hospital_managment_project/view/search_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _currentIndex = 0; // Current index of the BottomNavigationBar
+  final List<Widget> _pages = [
+    HomeScreen(),
+    SymptomChatbotPage(),
+    PatientProfilePage(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _currentIndex = index; // Update current index
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _pages[_currentIndex], // Display the selected page
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: "Chatbot",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: "My profile",
+          ),
+        ],
+        currentIndex: _currentIndex, // Set current index
+        onTap: _onItemTapped, // Handle item taps
+      ),
+    );
+  }
+}
+
+// HomeScreen widget to display the home content
+class HomeScreen extends StatelessWidget {
+  final ProfileController profileController = Get.find<ProfileController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,11 +65,12 @@ class HomePage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: AppBar(
+            automaticallyImplyLeading: false,
             backgroundColor: Colors.transparent,
             elevation: 0,
-            title: const Text(
-              'Hello, John 👋',
-              style: TextStyle(
+            title: Text(
+              'Hello, ${profileController.firstName} 👋',
+              style: const TextStyle(
                 color: Colors.black,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -34,7 +84,7 @@ class HomePage extends StatelessWidget {
               IconButton(
                 onPressed: () async {
                   GoogleSignIn googleSignIn = GoogleSignIn();
-                  googleSignIn.disconnect();
+                  await googleSignIn.disconnect();
                   await FirebaseAuth.instance.signOut();
                   Get.offNamed('/login');
                 },
@@ -56,7 +106,6 @@ class HomePage extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   image: const DecorationImage(
-                    //opacity: 30,
                     image: AssetImage(
                         'assets/homebg.jpg'), // Set your background image here
                     fit: BoxFit
@@ -89,7 +138,7 @@ class HomePage extends StatelessWidget {
                           GestureDetector(
                             onTap: () {
                               // Navigate to the symptom chatbot page
-                              //Get.toNamed('/symptom-chatbot');
+                              Get.toNamed('/symptom-chatbot');
                             },
                             child: Card(
                               color: Colors.blue[100],
@@ -113,11 +162,10 @@ class HomePage extends StatelessWidget {
                               ),
                             ),
                           ),
-                          //const SizedBox(height: 5),
                           GestureDetector(
                             onTap: () {
                               // Navigate to the x-ray chatbot page
-                              //Get.toNamed('/xray-chatbot');
+                              Get.toNamed('/xray-chatbot');
                             },
                             child: Card(
                               color: Colors.blue[100],
@@ -171,28 +219,6 @@ class HomePage extends StatelessWidget {
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          const BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          const BottomNavigationBarItem(
-              icon: Icon(Icons.search), label: "Search"),
-          BottomNavigationBarItem(
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color.fromARGB(255, 101, 154, 247),
-              ),
-              child: const Icon(Icons.chat, color: Colors.white),
-            ),
-            label: "Chatbot",
-          ),
-          const BottomNavigationBarItem(
-              icon: Icon(Icons.medical_services), label: "Med card"),
-          const BottomNavigationBarItem(
-              icon: Icon(Icons.person), label: "My profile"),
-        ],
       ),
     );
   }
