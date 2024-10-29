@@ -11,6 +11,7 @@ import 'package:hospital_managment_project/view/account/patient_profile_page.dar
 import 'package:hospital_managment_project/view/account/account_info.dart';
 import 'package:hospital_managment_project/view/pages/symptom_chatbot_page.dart';
 import 'package:hospital_managment_project/view/pages/xray_chatbot_page.dart';
+import 'package:hospital_managment_project/view/payment_screen.dart';
 import 'package:hospital_managment_project/view/splash_screen.dart';
 import 'package:hospital_managment_project/view/auth/login.dart';
 import 'package:hospital_managment_project/view/auth/signup.dart';
@@ -74,7 +75,7 @@ class _MyAppState extends State<MyApp> {
           unselectedItemColor: Colors.grey, // Unselected icon color
         ),
       ),
-      initialRoute: '/splash',
+      initialRoute: '/profile',
       home: (FirebaseAuth.instance.currentUser != null &&
               FirebaseAuth.instance.currentUser!.emailVerified)
           ? HomePage()
@@ -91,6 +92,7 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: '/symptom', page: () => SymptomCheckerPage()),
         GetPage(name: '/xray', page: () => XRayAnalyzerPage()),
         GetPage(name: '/feedback', page: () => FeedbackSupportPage()),
+        GetPage(name: '/payment', page: () => PaymentScreen()),
         GetPage(
             name: '/info',
             page: () => AccountInformationPage()), // HomePage route

@@ -88,6 +88,10 @@ flutter:
      - assets/robothp.png
      - assets/homebg.jpg
      - assets/account.png
+     - assets/visa.png
+     - assets/paypal.png
+     - assets/stripe.png
+     - assets/mastercard.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

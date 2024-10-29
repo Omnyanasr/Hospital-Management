@@ -4,14 +4,13 @@ class CustomTextForm extends StatelessWidget {
   final String hintText;
   final String labelText;
   final Icon icon;
-  final Icon? suffixIcon; // Make suffixIcon nullable
+  final Icon? suffixIcon;
   final TextEditingController mycontroller;
   final bool obscureText;
-  final String? Function(String?)?
-      validator; // New parameter to control text obscuring
+  final String? Function(String?)? validator;
   final TextStyle? hintStyle;
   final TextInputType? keyboardType;
-  final int? maxLines; // New parameter for hint text style
+  final int? maxLines;
 
   const CustomTextForm({
     super.key,
@@ -19,9 +18,9 @@ class CustomTextForm extends StatelessWidget {
     required this.mycontroller,
     required this.labelText,
     required this.icon,
-    this.suffixIcon, // Make suffixIcon optional
+    this.suffixIcon,
     this.obscureText = false,
-    required this.validator, // Default is not obscure
+    required this.validator,
     this.hintStyle,
     this.keyboardType,
     this.maxLines,
@@ -33,15 +32,15 @@ class CustomTextForm extends StatelessWidget {
       validator: validator,
       controller: mycontroller,
       keyboardType: keyboardType,
-      maxLines: maxLines,
-      obscureText: obscureText, // Use the new parameter here
+      maxLines:
+          obscureText ? 1 : maxLines, // Ensure single line for obscure text
+      obscureText: obscureText,
       decoration: InputDecoration(
         prefixIcon: icon,
-        suffixIcon: suffixIcon, // Optional suffixIcon
+        suffixIcon: suffixIcon,
         labelText: labelText,
         hintText: hintText,
-        hintStyle: hintStyle ??
-            const TextStyle(color: Colors.grey), // Default hint style
+        hintStyle: hintStyle ?? const TextStyle(color: Colors.grey),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),

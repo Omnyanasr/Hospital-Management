@@ -61,7 +61,7 @@ class PatientProfilePage extends StatelessWidget {
             icon: Icons.payment,
             title: 'Payment Method',
             onTap: () {
-              // Implement navigation or action for Payment Method
+              Get.toNamed("/payment");
             },
           ),
           _buildProfileOption(
