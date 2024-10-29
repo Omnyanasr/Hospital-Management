@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hospital_managment_project/components/payment_icon.dart';
 import 'package:hospital_managment_project/components/textformfield.dart';
 
@@ -32,8 +33,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
             expiryDateController.text.isEmpty ||
             cvvController.text.isEmpty ||
             amountController.text.isEmpty)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill all fields')),
+      Get.snackbar(
+        'Incomplete Details',
+        'Please fill all fields',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
       );
     } else {
       setState(() {
@@ -48,21 +53,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
         });
 
         // Display a confirmation dialog
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text("Payment Successful"),
-              content: const Text("Thank you for your payment via PayPal."),
-              actions: [
-                TextButton(
-                  child: const Text("OK"),
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Close the dialog
-                  },
-                ),
-              ],
-            );
+        Get.defaultDialog(
+          title: "Payment Successful",
+          middleText: "Thank you for your payment via PayPal.",
+          textConfirm: "OK",
+          onConfirm: () {
+            Get.back(); // Close the dialog
           },
         );
       } else {
@@ -71,8 +67,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
         setState(() {
           isLoading = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Processing payment...')),
+        Get.snackbar(
+          'Payment Processing',
+          'Processing payment...',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.greenAccent,
+          colorText: Colors.white,
         );
       }
     }
@@ -85,7 +85,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         title: const Text('Payment'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Get.back(), // Use Get.back() to go back
         ),
       ),
       body: Stack(
