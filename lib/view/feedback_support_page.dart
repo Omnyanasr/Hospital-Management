@@ -142,20 +142,13 @@ class _FeedbackSupportPageState extends State<FeedbackSupportPage> {
               ),
               const SizedBox(height: 15),
 
-              TextFormField(
-                controller: _feedbackController,
-                decoration: InputDecoration(
-                  hintText: 'Enter your feedback',
-                  labelText: 'Feedback',
-                  prefixIcon: const Icon(Icons.feedback),
-                  hintStyle:
-                      const TextStyle(color: Colors.grey), // Default hint style
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
+              CustomTextForm(
+                mycontroller: _feedbackController,
+                hintText: 'Enter your feedback',
+                labelText: 'Feedback',
+                icon: const Icon(Icons.feedback),
                 maxLines: 4,
-                // Allows for multiple lines of feedback
+                obscureText: false,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your feedback';
