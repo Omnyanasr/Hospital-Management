@@ -115,7 +115,8 @@ class SignUp extends StatelessWidget {
                             email: email.text,
                             password: password.text,
                           );
-                          FirebaseAuth.instance.currentUser!.sendEmailVerification();
+                          FirebaseAuth.instance.currentUser!
+                              .sendEmailVerification();
                           // Navigate to the login screen after successful sign-up
                           Get.offNamed('/login');
 
