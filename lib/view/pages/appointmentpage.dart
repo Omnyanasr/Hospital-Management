@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'myAppointmentsPage.dart';
+import 'chatPage.dart';
+
+
 
 class AppointmentPage extends StatefulWidget {
   @override
@@ -7,45 +11,28 @@ class AppointmentPage extends StatefulWidget {
 }
 
 class _AppointmentPageState extends State<AppointmentPage> {
-  // Sample data for available dates
-  final List<String> availableDates = [
-    "October \n29",
-    "October \n30",
-    "October \n31",
-    "November \n1",
-  ];
+  final List<String> availableDates = ["October 29", "October 30", "October 31", "November 1"];
+  final List<String> availableTimes = ["8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "1:00 PM"];
 
-  // Sample data for available time slots
-  final List<String> availableTimes = [
-    "8:00 AM",
-    "9:00 AM",
-    "10:00 AM",
-    "11:00 AM",
-    "1:00 PM",
-  ];
-
-  int selectedDateIndex = 0; // Default selected date index
-  int selectedTimeIndex = 0; // Default selected time index
+  int selectedDateIndex = 0;
+  int selectedTimeIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Appointment'),
-      ),
+      appBar: AppBar(title: Text('Appointment')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Doctor information
             Row(
               children: [
                 Container(
                   width: 90,
                   height: 90,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8), // Square shape with rounded corners
+                    borderRadius: BorderRadius.circular(8),
                     image: DecorationImage(
                       image: AssetImage('assets/doctor.png'), // Replace with your image asset
                       fit: BoxFit.cover,
@@ -83,8 +70,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                       });
                     },
                     child: Container(
-                      width: 80, // Fixed width for better alignment
-                      padding: EdgeInsets.symmetric(vertical: 12),
+                      padding: EdgeInsets.symmetric(horizontal:20, vertical: 12),
                       margin: EdgeInsets.only(right: 20),
                       decoration: BoxDecoration(
                         color: selectedDateIndex == index
@@ -150,18 +136,23 @@ class _AppointmentPageState extends State<AppointmentPage> {
               children: [
                 IconButton(
                   onPressed: () {
-                    // Implement chat functionality
-                    // For example: Get.toNamed('/chat', arguments: {'doctorId': '123'});
+                    Get.to(DoctorChatPage(doctorName: "Dr. Irum Khan"));
+
                   },
                   icon: Icon(Icons.chat),
                   iconSize: 30,
                   color: const Color.fromARGB(255, 101, 154, 247),
                 ),
                 SizedBox(width: 20),
-                // Book Appointment Button
                 ElevatedButton(
                   onPressed: () {
-                    // Implement booking logic, e.g., send selectedDate and selectedTime to the server
+                    Get.to(MyAppointmentsPage(), arguments: {
+                      'doctorName': "Dr. Irum Khan",
+                      'specialty': "Surgical Superintendent",
+                      'time': availableTimes[selectedTimeIndex],
+                      'date': availableDates[selectedDateIndex],
+                      'photo': 'assets/doctor.png', // Pass photo path
+                    });
                   },
                   child: Text("Book an Appointment"),
                 ),
