@@ -1,20 +1,73 @@
-import 'dart:io'; // Import for File
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hospital_managment_project/components/profile_input_feild.dart';
 import 'package:hospital_managment_project/controller/profile_controller.dart';
-import 'package:image_picker/image_picker.dart'; // Import image_picker
+import 'package:image_picker/image_picker.dart';
 
 class AccountInformationPage extends StatelessWidget {
   final ProfileController controller = Get.find<ProfileController>();
-  final ImagePicker _picker = ImagePicker(); // Initialize the ImagePicker
+  final ImagePicker _picker = ImagePicker();
+  final RxBool isLoading = false.obs;
 
   AccountInformationPage({super.key});
 
   Future<void> _pickImage() async {
-    // Show an image picker dialog
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      controller.profileImagePath.value = image.path; // Update the image path
+    try {
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        controller.profileImagePath.value = image.path;
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to pick image: $e');
+    }
+  }
+
+  Future<void> _pickDateOfBirth(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: controller.dateOfBirth.value ?? DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (pickedDate != null) {
+      controller.dateOfBirth.value = pickedDate;
+    }
+  }
+
+  Future<void> _saveProfile() async {
+    if (!GetUtils.isEmail(controller.email.value)) {
+      Get.snackbar('Error', 'Please enter a valid email.');
+      return;
+    }
+    if (controller.phone.value.length < 10) {
+      Get.snackbar('Error', 'Phone number must be at least 10 digits.');
+      return;
+    }
+
+    isLoading.value = true;
+
+    try {
+      await controller.updateProfile(
+        newName: controller.name.value,
+        newEmail: controller.email.value,
+        newPhone: controller.phone.value,
+        newLocation: controller.location.value,
+        newGender: controller.gender.value,
+        newBloodType: controller.bloodType.value,
+        newAllergies: controller.allergies.value,
+        newChronicConditions: controller.chronicConditions.value,
+        newSurgeries: controller.surgeries.value,
+        newDateOfBirth: controller.dateOfBirth.value,
+      );
+
+      Get.snackbar('Success', 'Profile updated successfully!',
+          snackPosition: SnackPosition.BOTTOM);
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to update profile: $e',
+          snackPosition: SnackPosition.BOTTOM);
+    } finally {
+      isLoading.value = false;
     }
   }
 
@@ -39,8 +92,7 @@ class AccountInformationPage extends StatelessWidget {
           children: [
             const SizedBox(height: 20),
             GestureDetector(
-              // Wrap CircleAvatar in GestureDetector
-              onTap: _pickImage, // Handle the tap
+              onTap: _pickImage,
               child: Obx(() => CircleAvatar(
                     radius: 50,
                     backgroundImage:
@@ -76,85 +128,51 @@ class AccountInformationPage extends StatelessWidget {
                 label: "Blood Type",
                 value: controller.bloodType.value,
                 onChanged: (value) => controller.bloodType.value = value),
-            ProfileInputField(
-                label: "Allergies",
-                value: controller.allergies.value,
-                onChanged: (value) => controller.allergies.value = value),
-            ProfileInputField(
-                label: "Chronic Conditions",
-                value: controller.chronicConditions.value,
-                onChanged: (value) =>
-                    controller.chronicConditions.value = value),
-            const SizedBox(
-                height: 20), // Space between last input field and button
-            ElevatedButton(
-              onPressed: () {
-                // Code to save changes
-                controller.updateProfile(
-                  controller.name.value,
-                  controller.email.value,
-                  controller.phone.value,
-                  controller.location.value,
-                  controller.gender.value,
-                  controller.bloodType.value,
-                  controller.allergies.value,
-                  controller.chronicConditions.value,
-                );
-                Get.snackbar(
-                  'Success',
-                  'Profile updated successfully!',
-                  snackPosition: SnackPosition.BOTTOM,
-                );
-              },
-              child: const Text("Save Changes"),
-            ),
-            const SizedBox(height: 20), // Additional bottom padding
+            const SizedBox(height: 16),
+            Obx(() => TextField(
+                  controller: TextEditingController(
+                    text: controller.allergies.value.join(', '),
+                  ),
+                  decoration: const InputDecoration(labelText: 'Allergies'),
+                  onChanged: (value) {
+                    controller.allergies.value =
+                        value.split(',').map((e) => e.trim()).toList();
+                  },
+                )),
+            const SizedBox(height: 16),
+            Obx(() => TextField(
+                  controller: TextEditingController(
+                    text: controller.chronicConditions.value.join(', '),
+                  ),
+                  decoration:
+                      const InputDecoration(labelText: 'Chronic Conditions'),
+                  onChanged: (value) {
+                    controller.chronicConditions.value =
+                        value.split(',').map((e) => e.trim()).toList();
+                  },
+                )),
+            const SizedBox(height: 16),
+            Obx(() => TextField(
+                  controller: TextEditingController(
+                    text: controller.surgeries.value.join(', '),
+                  ),
+                  decoration:
+                      const InputDecoration(labelText: 'Past Surgeries'),
+                  onChanged: (value) {
+                    controller.surgeries.value =
+                        value.split(',').map((e) => e.trim()).toList();
+                  },
+                )),
+            const SizedBox(height: 20),
+            Obx(() => ElevatedButton(
+                  onPressed: isLoading.value ? null : _saveProfile,
+                  child: isLoading.value
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text("Save Changes"),
+                )),
+            const SizedBox(height: 20),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class ProfileInputField extends StatelessWidget {
-  final String label;
-  final String value;
-  final ValueChanged<String> onChanged;
-
-  const ProfileInputField(
-      {super.key,
-      required this.label,
-      required this.value,
-      required this.onChanged});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(fontSize: 16, color: Colors.black54),
-          ),
-          const SizedBox(height: 5),
-          TextFormField(
-            initialValue: value,
-            onChanged: onChanged,
-            decoration: InputDecoration(
-              suffixIcon: const Icon(Icons.edit, color: Colors.grey),
-              filled: true,
-              fillColor: Colors.blue[50],
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide.none,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -5,12 +6,15 @@ import 'package:get/get.dart';
 import 'package:hospital_managment_project/components/textformfield.dart';
 
 class SignUp extends StatelessWidget {
-  TextEditingController username = TextEditingController();
-  TextEditingController phoneNumber = TextEditingController();
-  TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
-  TextEditingController confirmPassword = TextEditingController();
-  GlobalKey<FormState> formState = GlobalKey<FormState>();
+  // Controllers for input fields
+  final TextEditingController username = TextEditingController();
+  final TextEditingController phoneNumber = TextEditingController();
+  final TextEditingController email = TextEditingController();
+  final TextEditingController password = TextEditingController();
+  final TextEditingController confirmPassword = TextEditingController();
+
+  // Form key
+  final GlobalKey<FormState> formState = GlobalKey<FormState>();
 
   SignUp({super.key});
 
@@ -35,98 +39,105 @@ class SignUp extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 50),
-                  // Email TextField
+                  // Username Field
                   CustomTextForm(
-                      hintText: 'Enter your email',
-                      mycontroller: email,
-                      labelText: 'Email',
-                      icon: const Icon(Icons.email_outlined),
-                      validator: (val) {
-                        if (val == "") {
-                          return "Can't be Empty";
-                        }
-                        return null;
-                      }),
+                    hintText: 'Enter your username',
+                    mycontroller: username,
+                    labelText: 'Username',
+                    icon: const Icon(Icons.person_outline),
+                    validator: (val) {
+                      if (val == "") return "Can't be empty";
+                      return null;
+                    },
+                  ),
                   const SizedBox(height: 16),
-                  // Password TextField
+                  // Email Field
                   CustomTextForm(
-                      hintText: 'Enter your password',
-                      mycontroller: password,
-                      labelText: 'Password',
-                      icon: const Icon(Icons.lock_outline),
-                      suffixIcon: const Icon(Icons.visibility_off),
-                      obscureText: true,
-                      validator: (val) {
-                        if (val == "") {
-                          return "Can't be Empty";
-                        }
-                        return null;
-                      }),
+                    hintText: 'Enter your email',
+                    mycontroller: email,
+                    labelText: 'Email',
+                    icon: const Icon(Icons.email_outlined),
+                    validator: (val) {
+                      if (val == "") return "Can't be empty";
+                      if (!val!.contains('@')) return "Enter a valid email";
+                      return null;
+                    },
+                  ),
                   const SizedBox(height: 16),
-                  // Confirm Password TextField
+                  // Phone Number Field
                   CustomTextForm(
-                      hintText: 'Confirm your password',
-                      mycontroller: confirmPassword,
-                      labelText: 'Confirm Password',
-                      icon: const Icon(Icons.lock_outline),
-                      suffixIcon: const Icon(Icons.visibility_off),
-                      obscureText: true,
-                      validator: (val) {
-                        if (val == "") {
-                          return "Can't be Empty";
-                        }
-                        return null;
-                      }),
+                    hintText: 'Enter your phone number',
+                    mycontroller: phoneNumber,
+                    labelText: 'Phone Number',
+                    icon: const Icon(Icons.phone_outlined),
+                    validator: (val) {
+                      if (val == "") return "Can't be empty";
+                      if (val!.length < 10) return "Enter a valid phone number";
+                      return null;
+                    },
+                  ),
                   const SizedBox(height: 16),
-                  // Phone Number TextField
+                  // Password Field
                   CustomTextForm(
-                      hintText: 'Enter your phone number',
-                      mycontroller: phoneNumber,
-                      labelText: 'Phone Number',
-                      icon: const Icon(Icons.phone_outlined),
-                      validator: (val) {
-                        if (val == "") {
-                          return "Can't be Empty";
-                        }
-                        return null;
-                      }),
+                    hintText: 'Enter your password',
+                    mycontroller: password,
+                    labelText: 'Password',
+                    icon: const Icon(Icons.lock_outline),
+                    obscureText: true,
+                    validator: (val) {
+                      if (val == "") return "Can't be empty";
+                      if (val!.length < 6)
+                        return "Password must be at least 6 characters";
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  // Confirm Password Field
+                  CustomTextForm(
+                    hintText: 'Confirm your password',
+                    mycontroller: confirmPassword,
+                    labelText: 'Confirm Password',
+                    icon: const Icon(Icons.lock_outline),
+                    obscureText: true,
+                    validator: (val) {
+                      if (val == "") return "Can't be empty";
+                      if (val != password.text) return "Passwords do not match";
+                      return null;
+                    },
+                  ),
                   const SizedBox(height: 30),
-                  // Sign up Button
+                  // Sign Up Button
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      minimumSize:
-                          const Size(double.infinity, 50), // Full width button
+                      minimumSize: const Size(double.infinity, 50),
                     ),
                     onPressed: () async {
                       if (formState.currentState!.validate()) {
-                        if (password.text != confirmPassword.text) {
-                          Get.snackbar(
-                            'Error',
-                            'Passwords do not match.',
-                            snackPosition: SnackPosition.BOTTOM,
-                            backgroundColor: Colors.red,
-                            colorText: Colors.white,
-                          );
-                          return;
-                        }
                         try {
+                          // Create a user in Firebase Authentication
                           final credential = await FirebaseAuth.instance
                               .createUserWithEmailAndPassword(
-                            email: email.text,
-                            password: password.text,
+                            email: email.text.trim(),
+                            password: password.text.trim(),
                           );
-                          FirebaseAuth.instance.currentUser!
-                              .sendEmailVerification();
-                          // Navigate to the login screen after successful sign-up
-                          Get.offNamed('/login');
 
-                          Get.snackbar(
-                            'Success',
-                            'Account created successfully.',
-                            snackPosition: SnackPosition.BOTTOM,
-                            backgroundColor: Colors.green,
-                            colorText: Colors.white,
-                          );
+                          // Save user details to Firestore
+                          await FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(credential.user!.uid)
+                              .set({
+                            'username': username.text.trim(),
+                            'email': email.text.trim(),
+                            'phone': phoneNumber.text.trim(),
+                            'createdAt': DateTime.now(),
+                            'hasCompletedOnboarding': false,
+                          });
+
+                          // Send email verification
+                          await credential.user!.sendEmailVerification();
+
+                          // Navigate to Onboarding Info
+                          Get.offNamed('/onboarding_info');
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'weak-password') {
                             Get.snackbar(
@@ -138,10 +149,18 @@ class SignUp extends StatelessWidget {
                             );
                           } else if (e.code == 'email-already-in-use') {
                             Get.snackbar(
-                              'Email Exists',
-                              'The account already exists for that email.',
+                              'Email In Use',
+                              'An account already exists for that email.',
                               snackPosition: SnackPosition.BOTTOM,
-                              backgroundColor: Colors.orange,
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                            );
+                          } else {
+                            Get.snackbar(
+                              'Error',
+                              'Something went wrong. Please try again later.',
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: Colors.red,
                               colorText: Colors.white,
                             );
                           }
@@ -158,24 +177,23 @@ class SignUp extends StatelessWidget {
                       }
                     },
                     child: const Text(
-                      'Sign up',
+                      'Sign Up',
                       style: TextStyle(fontSize: 18),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  // Sign in Option
+                  // Already have an account?
                   Text.rich(
                     TextSpan(
-                      text: "Already have an Account? ",
+                      text: "Already have an account? ",
                       style: const TextStyle(color: Colors.grey),
                       children: [
                         TextSpan(
-                          text: 'Sign in',
+                          text: 'Sign In',
                           style: const TextStyle(
                             color: Colors.blue,
                             decoration: TextDecoration.underline,
                           ),
-                          // Navigate to Sign in page
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               Get.offNamed('/login');

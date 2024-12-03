@@ -123,7 +123,7 @@ class _FeedbackSupportPageState extends State<FeedbackSupportPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Rate Your Experience',
+                    '  Rate Your Experience',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   Slider(
@@ -137,6 +137,10 @@ class _FeedbackSupportPageState extends State<FeedbackSupportPage> {
                     label: _rating.round().toString(),
                     min: 1,
                     max: 5,
+                    activeColor: Color.fromARGB(255, 101, 154,
+                        247), // Change the color of the active part of the slider
+                    inactiveColor: Colors
+                        .grey, // Change the color of the inactive part of the slider
                   ),
                 ],
               ),

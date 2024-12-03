@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+//import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hospital_managment_project/components/appointment_card.dart';
 import 'package:hospital_managment_project/components/doctors_available.dart';
 import 'package:hospital_managment_project/components/treatment_row.dart';
@@ -9,6 +9,8 @@ import 'package:hospital_managment_project/controller/profile_controller.dart';
 import 'package:hospital_managment_project/view/account/patient_profile_page.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -25,12 +27,13 @@ class _HomePageState extends State<HomePage> {
   void _showChatbotOptions(BuildContext context) {
     showMenu(
       context: context,
-      position: RelativeRect.fromLTRB(50, 600, 50, 0), // Adjust for positioning
+      position:
+          const RelativeRect.fromLTRB(50, 600, 50, 0), // Adjust for positioning
       items: [
         PopupMenuItem(
           child: ListTile(
-            leading: Icon(Icons.medical_services, color: Colors.blue),
-            title: Text("Symptom Checker"),
+            leading: const Icon(Icons.medical_services, color: Colors.blue),
+            title: const Text("Symptom Checker"),
             onTap: () {
               Navigator.pop(context); // Close the menu
               Get.toNamed('/symptom');
@@ -39,8 +42,8 @@ class _HomePageState extends State<HomePage> {
         ),
         PopupMenuItem(
           child: ListTile(
-            leading: Icon(Icons.image_search, color: Colors.blue),
-            title: Text("X-ray Analyzer"),
+            leading: const Icon(Icons.image_search, color: Colors.blue),
+            title: const Text("X-ray Analyzer"),
             onTap: () {
               Navigator.pop(context); // Close the menu
               Get.toNamed('/xray');
@@ -70,15 +73,15 @@ class _HomePageState extends State<HomePage> {
           : _pages[_currentIndex], // Display the selected page
       bottomNavigationBar: BottomNavigationBar(
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          const BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(
             icon: GestureDetector(
               onTap: () => _showChatbotOptions(context), // Show menu on tap
-              child: Icon(Icons.chat),
+              child: const Icon(Icons.chat),
             ),
             label: "Chatbot",
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: "My profile",
           ),
@@ -92,7 +95,12 @@ class _HomePageState extends State<HomePage> {
 
 // HomeScreen widget to display the home content
 class HomeScreen extends StatelessWidget {
-  final ProfileController profileController = Get.find<ProfileController>();
+  final ProfileController profileController =
+      Get.isRegistered<ProfileController>()
+          ? Get.find<ProfileController>()
+          : Get.put(ProfileController());
+
+  HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +115,7 @@ class HomeScreen extends StatelessWidget {
             backgroundColor: Colors.transparent,
             elevation: 0,
             title: Text(
-              'Hello, ${profileController.firstName} 👋',
+              'Hello, ${profileController.name.value.split(' ')[0]} 👋',
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: 24,
@@ -121,8 +129,8 @@ class HomeScreen extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () async {
-                  GoogleSignIn googleSignIn = GoogleSignIn();
-                  await googleSignIn.disconnect();
+                  //GoogleSignIn googleSignIn = GoogleSignIn();
+                  //await googleSignIn.disconnect();
                   await FirebaseAuth.instance.signOut();
                   Get.offNamed('/login');
                 },

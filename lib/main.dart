@@ -2,7 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth
-import 'package:google_fonts/google_fonts.dart';
+//import 'package:google_fonts/google_fonts.dart';
+import 'package:hospital_managment_project/view/user_info/onboarding_screen_info.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
 import 'package:hospital_managment_project/controller/profile_controller.dart';
 import 'package:hospital_managment_project/view/feedback_support_page.dart';
 import 'package:hospital_managment_project/view/homepage.dart';
@@ -15,43 +17,24 @@ import 'package:hospital_managment_project/view/payment_screen.dart';
 import 'package:hospital_managment_project/view/splash_screen.dart';
 import 'package:hospital_managment_project/view/auth/login.dart';
 import 'package:hospital_managment_project/view/auth/signup.dart';
-import 'package:hospital_managment_project/view/pages/appointmentpage.dart'; // Import your appointment page
+import 'package:hospital_managment_project/view/pages/appointmentpage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  Get.put(ProfileController());
-  runApp(const MyApp());
+
+  // Check if onboarding is complete
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool hasCompletedOnboarding =
+      prefs.getBool('hasCompletedOnboarding') ?? false;
+
+  runApp(MyApp(hasCompletedOnboarding: hasCompletedOnboarding));
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class MyApp extends StatelessWidget {
+  final bool hasCompletedOnboarding;
 
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  User? _currentUser;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Listen to authentication state changes
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user == null) {
-        print('User is currently signed out!');
-      } else {
-        print('User is signed in!');
-      }
-
-      // Update state with current user
-      setState(() {
-        _currentUser = user;
-      });
-    });
-  }
+  const MyApp({super.key, required this.hasCompletedOnboarding});
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +43,6 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
             seedColor: const Color.fromARGB(255, 101, 154, 247)),
-        //textTheme: GoogleFonts.openSansTextTheme(),
         useMaterial3: true,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
@@ -69,17 +51,25 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          // Set the color for selected and unselected icons and labels
           selectedItemColor:
               Color.fromARGB(255, 101, 154, 247), // Selected icon color
           unselectedItemColor: Colors.grey, // Unselected icon color
         ),
       ),
       initialRoute: '/splash',
-      home: (FirebaseAuth.instance.currentUser != null &&
-              FirebaseAuth.instance.currentUser!.emailVerified)
-          ? HomePage()
-          : Login(),
+      home: FutureBuilder<void>(
+        future:
+            _initializeProfileController(), // Initialize ProfileController asynchronously
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const SplashScreen(); // Show splash screen until the controller is ready
+          } else if (snapshot.hasError) {
+            return const Center(child: Text('Error loading profile'));
+          } else {
+            return _determineHomeScreen();
+          }
+        },
+      ),
       getPages: [
         GetPage(name: '/splash', page: () => const SplashScreen()),
         GetPage(name: '/onboarding', page: () => OnboardingScreen()),
@@ -87,16 +77,29 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: '/signup', page: () => SignUp()),
         GetPage(name: '/home', page: () => HomePage()),
         GetPage(name: '/appointment', page: () => AppointmentPage()),
-        GetPage(name: '/home', page: () => HomePage()),
         GetPage(name: '/profile', page: () => PatientProfilePage()),
         GetPage(name: '/symptom', page: () => SymptomCheckerPage()),
         GetPage(name: '/xray', page: () => XRayAnalyzerPage()),
         GetPage(name: '/feedback', page: () => FeedbackSupportPage()),
-        GetPage(name: '/payment', page: () => PaymentScreen()),
-        GetPage(
-            name: '/info',
-            page: () => AccountInformationPage()), // HomePage route
+        GetPage(name: '/payment', page: () => const PaymentScreen()),
+        GetPage(name: '/onboarding_info', page: () => OnboardingScreenInfo()),
+        GetPage(name: '/info', page: () => AccountInformationPage()),
       ],
     );
+  }
+
+  // Initialize the ProfileController asynchronously
+  Future<void> _initializeProfileController() async {
+    // You can check if the user is logged in and load profile data here
+    await Get.putAsync(() async => ProfileController());
+  }
+
+  Widget _determineHomeScreen() {
+    if (FirebaseAuth.instance.currentUser != null &&
+        FirebaseAuth.instance.currentUser!.emailVerified) {
+      return hasCompletedOnboarding ? const HomePage() : OnboardingScreenInfo();
+    } else {
+      return Login();
+    }
   }
 }

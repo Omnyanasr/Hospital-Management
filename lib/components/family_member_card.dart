@@ -5,8 +5,11 @@ class FamilyMemberCard extends StatelessWidget {
   final String role;
   final String imagePath;
 
-  FamilyMemberCard(
-      {required this.name, required this.role, required this.imagePath});
+  const FamilyMemberCard(
+      {super.key,
+      required this.name,
+      required this.role,
+      required this.imagePath});
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +20,9 @@ class FamilyMemberCard extends StatelessWidget {
           backgroundImage:
               AssetImage(imagePath), // Replace with your image asset
         ),
-        SizedBox(height: 5),
-        Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
-        Text(role, style: TextStyle(color: Colors.grey)),
+        const SizedBox(height: 5),
+        Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+        Text(role, style: const TextStyle(color: Colors.grey)),
       ],
     );
   }
