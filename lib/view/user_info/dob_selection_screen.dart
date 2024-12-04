@@ -4,7 +4,7 @@ import 'package:intl/intl.dart'; // For formatting the date
 import 'package:hospital_managment_project/controller/onboarding_controller_info.dart';
 
 class DobSelectionScreen extends StatelessWidget {
-  final OnboardingController controller;
+  final OnboardingControllerInfo controller;
 
   DobSelectionScreen({required this.controller});
 

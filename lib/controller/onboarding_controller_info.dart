@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hospital_managment_project/view/auth/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:hospital_managment_project/view/homepage.dart';
 
-class OnboardingController extends GetxController {
+class OnboardingControllerInfo extends GetxController {
   // Page management
   var currentIndex = 0.obs;
 

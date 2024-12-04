@@ -3,7 +3,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:hospital_managment_project/controller/onboarding_controller_info.dart';
 
 class ChronicDiseaseSelectionScreen extends StatelessWidget {
-  final OnboardingController controller;
+  final OnboardingControllerInfo controller;
 
   ChronicDiseaseSelectionScreen({required this.controller});
 

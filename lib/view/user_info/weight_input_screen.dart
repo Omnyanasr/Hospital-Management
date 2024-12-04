@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hospital_managment_project/controller/onboarding_controller_info.dart';
 
 class WeightInputScreen extends StatelessWidget {
-  final OnboardingController controller;
+  final OnboardingControllerInfo controller;
 
   WeightInputScreen({required this.controller});
 

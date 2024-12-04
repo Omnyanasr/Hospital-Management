@@ -5,7 +5,7 @@ import 'package:hospital_managment_project/controller/onboarding_controller_info
 import 'package:intl/intl.dart';
 
 class GenderAndDobSelectionScreen extends StatefulWidget {
-  final OnboardingController controller; // Controller passed to the screen
+  final OnboardingControllerInfo controller; // Controller passed to the screen
 
   GenderAndDobSelectionScreen({required this.controller});
 

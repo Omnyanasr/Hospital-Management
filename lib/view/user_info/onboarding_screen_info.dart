@@ -3,13 +3,14 @@ import 'package:get/get.dart';
 import 'package:hospital_managment_project/controller/onboarding_controller_info.dart';
 import 'package:hospital_managment_project/view/user_info/allergy_selection_screen.dart';
 import 'package:hospital_managment_project/view/user_info/chronic_disease_selection_screen.dart';
-import 'package:hospital_managment_project/view/user_info/dob_selection_screen.dart';
+//import 'package:hospital_managment_project/view/user_info/dob_selection_screen.dart';
 import 'package:hospital_managment_project/view/user_info/gender_selection_screen.dart';
 import 'package:hospital_managment_project/view/user_info/surgery_history_screen.dart';
-import 'package:hospital_managment_project/view/user_info/weight_input_screen.dart';
+//import 'package:hospital_managment_project/view/user_info/weight_input_screen.dart';
 
 class OnboardingScreenInfo extends StatelessWidget {
-  final OnboardingController controller = Get.put(OnboardingController());
+  final OnboardingControllerInfo controller =
+      Get.put(OnboardingControllerInfo());
 
   OnboardingScreenInfo({super.key});
 

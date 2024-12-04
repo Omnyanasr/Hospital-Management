@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:hospital_managment_project/controller/onboarding_controller_info.dart';
 
 class SurgeryHistoryScreen extends StatelessWidget {
-  final OnboardingController controller;
+  final OnboardingControllerInfo controller;
 
   SurgeryHistoryScreen({required this.controller});
 
