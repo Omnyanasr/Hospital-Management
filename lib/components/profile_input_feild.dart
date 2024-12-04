@@ -30,7 +30,7 @@ class ProfileInputField extends StatelessWidget {
             decoration: InputDecoration(
               suffixIcon: const Icon(Icons.edit, color: Colors.grey),
               filled: true,
-              fillColor: Colors.blue[50],
+              fillColor: const Color.fromRGBO(227, 242, 253, 1),
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               border: OutlineInputBorder(

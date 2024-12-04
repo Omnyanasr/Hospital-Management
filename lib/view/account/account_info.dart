@@ -9,8 +9,31 @@ class AccountInformationPage extends StatelessWidget {
   final ProfileController controller = Get.find<ProfileController>();
   final ImagePicker _picker = ImagePicker();
   final RxBool isLoading = false.obs;
+  final TextEditingController allergiesController = TextEditingController();
+  final TextEditingController chronicConditionsController =
+      TextEditingController();
+  final TextEditingController surgeriesController = TextEditingController();
 
-  AccountInformationPage({super.key});
+  AccountInformationPage({super.key}) {
+    // Link controllers to Rx variables
+    allergiesController.text = controller.allergies.value.join(', ');
+    chronicConditionsController.text =
+        controller.chronicConditions.value.join(', ');
+    surgeriesController.text = controller.surgeries.value.join(', ');
+
+    // Update controllers when Rx variables change
+    controller.allergies.listen((value) {
+      allergiesController.text = value.join(', ');
+    });
+
+    controller.chronicConditions.listen((value) {
+      chronicConditionsController.text = value.join(', ');
+    });
+
+    controller.surgeries.listen((value) {
+      surgeriesController.text = value.join(', ');
+    });
+  }
 
   Future<void> _pickImage() async {
     try {
@@ -124,45 +147,78 @@ class AccountInformationPage extends StatelessWidget {
                 label: "Gender",
                 value: controller.gender.value,
                 onChanged: (value) => controller.gender.value = value),
-            ProfileInputField(
-                label: "Blood Type",
-                value: controller.bloodType.value,
-                onChanged: (value) => controller.bloodType.value = value),
             const SizedBox(height: 16),
-            Obx(() => TextField(
-                  controller: TextEditingController(
-                    text: controller.allergies.value.join(', '),
+            Obx(() => DropdownButtonFormField<String>(
+                  value: controller.bloodType.value.isNotEmpty
+                      ? controller.bloodType.value
+                      : null,
+                  items: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
+                      .map((bloodType) => DropdownMenuItem(
+                            value: bloodType,
+                            child: Text(bloodType),
+                          ))
+                      .toList(),
+                  decoration: InputDecoration(
+                    labelText: "Blood Type",
+                    border: OutlineInputBorder(
+                      borderRadius:
+                          BorderRadius.circular(12), // Rounded corners
+                      borderSide: const BorderSide(
+                        color: Color.fromRGBO(227, 242, 253, 1), // Border color
+                        width: 2.0, // Border thickness
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(
+                        color: Color.fromRGBO(
+                            227, 242, 253, 1), // Border color when not focused
+                        width: 2.0,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(
+                        color: Color.fromRGBO(
+                            164, 210, 242, 1), // Border color when focused
+                        width: 2.5, // Thicker border when focused
+                      ),
+                    ),
                   ),
-                  decoration: const InputDecoration(labelText: 'Allergies'),
                   onChanged: (value) {
-                    controller.allergies.value =
-                        value.split(',').map((e) => e.trim()).toList();
+                    if (value != null) {
+                      controller.bloodType.value = value;
+                    }
                   },
                 )),
             const SizedBox(height: 16),
-            Obx(() => TextField(
-                  controller: TextEditingController(
-                    text: controller.chronicConditions.value.join(', '),
-                  ),
-                  decoration:
-                      const InputDecoration(labelText: 'Chronic Conditions'),
-                  onChanged: (value) {
-                    controller.chronicConditions.value =
-                        value.split(',').map((e) => e.trim()).toList();
-                  },
-                )),
+            TextField(
+              controller: allergiesController,
+              decoration: const InputDecoration(labelText: 'Allergies'),
+              onChanged: (value) {
+                controller.allergies.value =
+                    value.split(',').map((e) => e.trim()).toList();
+              },
+            ),
             const SizedBox(height: 16),
-            Obx(() => TextField(
-                  controller: TextEditingController(
-                    text: controller.surgeries.value.join(', '),
-                  ),
-                  decoration:
-                      const InputDecoration(labelText: 'Past Surgeries'),
-                  onChanged: (value) {
-                    controller.surgeries.value =
-                        value.split(',').map((e) => e.trim()).toList();
-                  },
-                )),
+            TextField(
+              controller: chronicConditionsController,
+              decoration:
+                  const InputDecoration(labelText: 'Chronic Conditions'),
+              onChanged: (value) {
+                controller.chronicConditions.value =
+                    value.split(',').map((e) => e.trim()).toList();
+              },
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: surgeriesController,
+              decoration: const InputDecoration(labelText: 'Past Surgeries'),
+              onChanged: (value) {
+                controller.surgeries.value =
+                    value.split(',').map((e) => e.trim()).toList();
+              },
+            ),
             const SizedBox(height: 20),
             Obx(() => ElevatedButton(
                   onPressed: isLoading.value ? null : _saveProfile,

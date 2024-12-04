@@ -114,14 +114,17 @@ class HomeScreen extends StatelessWidget {
             automaticallyImplyLeading: false,
             backgroundColor: Colors.transparent,
             elevation: 0,
-            title: Text(
-              'Hello, ${profileController.name.value.split(' ')[0]} 👋',
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            title: Obx(() {
+              final firstName = profileController.name.value.split(' ')[0];
+              return Text(
+                'Hello, $firstName 👋',
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              );
+            }),
             actions: [
               IconButton(
                 icon: const Icon(Icons.notifications, color: Colors.black),
