@@ -196,8 +196,33 @@ class AccountInformationPage extends StatelessWidget {
               controller: allergiesController,
               decoration: const InputDecoration(labelText: 'Allergies'),
               onChanged: (value) {
-                controller.allergies.value =
-                    value.split(',').map((e) => e.trim()).toList();
+                final updatedAllergies = value
+                    .split(',')
+                    .map((e) => e.trimLeft()) // Trim leading spaces
+                    .toList();
+
+                // Filter out consecutive empty entries
+                final cleanedAllergies = <String>[];
+                for (var i = 0; i < updatedAllergies.length; i++) {
+                  // Add to cleaned list only if not empty or not consecutive
+                  if (updatedAllergies[i].isNotEmpty ||
+                      (i > 0 && updatedAllergies[i - 1].isNotEmpty)) {
+                    cleanedAllergies.add(updatedAllergies[i]);
+                  }
+                }
+
+                // Update the allergies list
+                controller.allergies.value = cleanedAllergies;
+
+                // Rebuild the text field content with cleaned input
+                allergiesController.value = TextEditingValue(
+                  text: cleanedAllergies
+                      .join(', '), // Join list into a clean string
+                  selection: TextSelection.collapsed(
+                      offset: cleanedAllergies.join(', ').length),
+                );
+
+                print(controller.allergies.value); // Debugging output
               },
             ),
             const SizedBox(height: 16),
@@ -206,8 +231,27 @@ class AccountInformationPage extends StatelessWidget {
               decoration:
                   const InputDecoration(labelText: 'Chronic Conditions'),
               onChanged: (value) {
-                controller.chronicConditions.value =
-                    value.split(',').map((e) => e.trim()).toList();
+                final updatedConditions =
+                    value.split(',').map((e) => e.trimLeft()).toList();
+
+                final cleanedConditions = <String>[];
+                for (var i = 0; i < updatedConditions.length; i++) {
+                  if (updatedConditions[i].isNotEmpty ||
+                      (i > 0 && updatedConditions[i - 1].isNotEmpty)) {
+                    cleanedConditions.add(updatedConditions[i]);
+                  }
+                }
+
+                controller.chronicConditions.value = cleanedConditions;
+
+                chronicConditionsController.value = TextEditingValue(
+                  text: cleanedConditions.join(', '),
+                  selection: TextSelection.collapsed(
+                    offset: cleanedConditions.join(', ').length,
+                  ),
+                );
+
+                print(controller.chronicConditions.value);
               },
             ),
             const SizedBox(height: 16),
@@ -215,8 +259,27 @@ class AccountInformationPage extends StatelessWidget {
               controller: surgeriesController,
               decoration: const InputDecoration(labelText: 'Past Surgeries'),
               onChanged: (value) {
-                controller.surgeries.value =
-                    value.split(',').map((e) => e.trim()).toList();
+                final updatedSurgeries =
+                    value.split(',').map((e) => e.trimLeft()).toList();
+
+                final cleanedSurgeries = <String>[];
+                for (var i = 0; i < updatedSurgeries.length; i++) {
+                  if (updatedSurgeries[i].isNotEmpty ||
+                      (i > 0 && updatedSurgeries[i - 1].isNotEmpty)) {
+                    cleanedSurgeries.add(updatedSurgeries[i]);
+                  }
+                }
+
+                controller.surgeries.value = cleanedSurgeries;
+
+                surgeriesController.value = TextEditingValue(
+                  text: cleanedSurgeries.join(', '),
+                  selection: TextSelection.collapsed(
+                    offset: cleanedSurgeries.join(', ').length,
+                  ),
+                );
+
+                print(controller.surgeries.value);
               },
             ),
             const SizedBox(height: 20),

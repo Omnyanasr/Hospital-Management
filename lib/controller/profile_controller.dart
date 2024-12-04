@@ -116,7 +116,7 @@ class ProfileController extends GetxController {
           'gender': newGender ?? gender.value,
           'bloodType': newBloodType ?? bloodType.value,
           'allergies': newAllergies ?? allergies,
-          'chronicConditions': newChronicConditions ?? chronicConditions,
+          'chronicDiseases': newChronicConditions ?? chronicConditions,
           'surgeries': newSurgeries ?? surgeries,
           'dateOfBirth': newDateOfBirth ?? dateOfBirth.value,
           'profileImagePath':
