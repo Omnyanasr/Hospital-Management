@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>957343334423-svk7505plvncg9an7pltbb8a4v1q3euk.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.957343334423-svk7505plvncg9an7pltbb8a4v1q3euk</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>957343334423-1d66vcf0ji63plnjvilbsqltff0edkhl.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDGpYQyL5zcYGEjo0uv75uz5N60FiWPbTA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>957343334423</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.hospitalManagmentProject</string>
+	<key>PROJECT_ID</key>
+	<string>hospital-management-cb3cd</string>
+	<key>STORAGE_BUCKET</key>
+	<string>hospital-management-cb3cd.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:957343334423:ios:e27bb13649a7f6edea5c52</string>
+</dict>
+</plist>
