@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "957343334423",
     "project_id": "hospital-management-cb3cd",
-    "storage_bucket": "hospital-management-cb3cd.appspot.com"
+    "storage_bucket": "hospital-management-cb3cd.firebasestorage.app"
   },
   "client": [
     {
@@ -14,7 +14,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "957343334423-1feirikd9k8fdfm5r9dfcpe7a20phtvn.apps.googleusercontent.com",
+          "client_id": "957343334423-tavt18omri05ojmv2tqipkq7ptpl2gsq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.hospital_managment_project",
@@ -22,7 +22,7 @@
           }
         },
         {
-          "client_id": "957343334423-qiaagcni1j9c9rg7er09qrlt94vea2ik.apps.googleusercontent.com",
+          "client_id": "957343334423-qd4br65fslilnqnf2cjblh337fqpuphq.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -35,8 +35,15 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "957343334423-qiaagcni1j9c9rg7er09qrlt94vea2ik.apps.googleusercontent.com",
+              "client_id": "957343334423-qd4br65fslilnqnf2cjblh337fqpuphq.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "957343334423-svk7505plvncg9an7pltbb8a4v1q3euk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.hospitalManagmentProject"
+              }
             }
           ]
         }

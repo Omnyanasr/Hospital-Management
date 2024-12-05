@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 //import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hospital_managment_project/components/appointment_card.dart';
 import 'package:hospital_managment_project/components/doctors_available.dart';
@@ -132,9 +133,11 @@ class HomeScreen extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () async {
-                  //GoogleSignIn googleSignIn = GoogleSignIn();
-                  //await googleSignIn.disconnect();
-                  await FirebaseAuth.instance.signOut();
+                  // Google Sign-Out logic
+                  GoogleSignIn googleSignIn = GoogleSignIn();
+                  await googleSignIn.signOut(); // Sign out from Google
+                  await FirebaseAuth.instance.signOut(); // Sign out from Firebase
+
                   Get.offNamed('/login');
                 },
                 icon: const Icon(Icons.exit_to_app),

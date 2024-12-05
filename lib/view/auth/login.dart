@@ -17,6 +17,34 @@ class Login extends StatelessWidget {
 
   Login({super.key});
 
+  Future<UserCredential> signInWithGoogle() async {
+    try {
+      // Trigger the Google authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      if (googleUser == null) {
+        throw Exception('Google Sign-In aborted by user.');
+      }
+
+      // Obtain the auth details from the Google account
+      final GoogleSignInAuthentication googleAuth =
+      await googleUser.authentication;
+
+      // Create a credential for Firebase
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Sign in with the credential
+      return await FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (e) {
+      // Handle errors
+      print('Google Sign-In Error: $e');
+      rethrow;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -146,8 +174,24 @@ class Login extends StatelessWidget {
                       height: 24,
                     ),
                     label: const Text('Sign in with Google'),
-                    onPressed: () {
-                      // Google sign-in logic here
+                    onPressed: () async {
+                      try {
+                        // Call the Google Sign-In function
+                        final UserCredential userCredential =
+                        await signInWithGoogle();
+
+                        // Navigate to the home screen
+                        Get.offAllNamed('/home');
+                      } catch (e) {
+                        Get.snackbar(
+                          'Error',
+                          'Google Sign-In failed. Please try again.',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
+                        );
+                      }
+
                     },
                   ),
                   const SizedBox(height: 16),
