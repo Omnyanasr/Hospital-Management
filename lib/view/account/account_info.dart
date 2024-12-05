@@ -151,8 +151,18 @@ class AccountInformationPage extends StatelessWidget {
             Obx(() => DropdownButtonFormField<String>(
                   value: controller.bloodType.value.isNotEmpty
                       ? controller.bloodType.value
-                      : null,
-                  items: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
+                      : "Unknown",
+                  items: [
+                    'A+',
+                    'A-',
+                    'B+',
+                    'B-',
+                    'O+',
+                    'O-',
+                    'AB+',
+                    'AB-',
+                    "Unknown"
+                  ]
                       .map((bloodType) => DropdownMenuItem(
                             value: bloodType,
                             child: Text(bloodType),
