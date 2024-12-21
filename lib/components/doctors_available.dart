@@ -7,9 +7,21 @@ class DoctorsAvailable extends StatelessWidget {
   Widget build(BuildContext context) {
     // List of doctors with their details
     final List<Map<String, String>> doctors = [
-      {"name": "Hanna Hall", "role": "Wife", "imagePath": 'assets/doctor.png'},
-      {"name": "Oliver Hall", "role": "Son", "imagePath": 'assets/doctor.png'},
-      {"name": "Eva Hall", "role": "Mother", "imagePath": 'assets/doctor.png'},
+      {
+        "name": "Dr. Johnson",
+        "role": "Neurologist",
+        "imagePath": 'assets/doctor.png'
+      },
+      {
+        "name": "Dr. Ibrahim Ali",
+        "role": "Ultrasound",
+        "imagePath": 'assets/doctor.png'
+      },
+      {
+        "name": "Dr. Metwali",
+        "role": "Vascular",
+        "imagePath": 'assets/doctor.png'
+      },
     ];
 
     return Row(
