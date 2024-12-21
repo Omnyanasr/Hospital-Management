@@ -27,8 +27,7 @@ class Login extends StatelessWidget {
       }
 
       // Obtain the auth details from the Google account
-      final GoogleSignInAuthentication googleAuth =
-      await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
       // Create a credential for Firebase
       final AuthCredential credential = GoogleAuthProvider.credential(
@@ -37,13 +36,36 @@ class Login extends StatelessWidget {
       );
 
       // Sign in with the credential
-      return await FirebaseAuth.instance.signInWithCredential(credential);
+      final UserCredential userCredential =
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      // Save or update user details in Firestore
+      final user = userCredential.user;
+      if (user != null) {
+        final userDoc = FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+        final docSnapshot = await userDoc.get();
+
+        if (!docSnapshot.exists) {
+          // Add user details if they don't exist in Firestore
+          await userDoc.set({
+            'username': user.displayName ?? 'Anonymous',
+            'email': user.email ?? '',
+            'photoUrl': user.photoURL ?? '',
+            'createdAt': DateTime.now(),
+            'hasCompletedOnboarding': false,
+          });
+        }
+      }
+
+      return userCredential;
     } catch (e) {
       // Handle errors
       print('Google Sign-In Error: $e');
       rethrow;
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

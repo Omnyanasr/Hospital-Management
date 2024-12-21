@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hospital_managment_project/controller/profile_controller.dart';
 
 class PatientProfilePage extends StatelessWidget {
@@ -81,8 +83,12 @@ class PatientProfilePage extends StatelessWidget {
           _buildProfileOption(
             icon: Icons.logout,
             title: 'Logout',
-            onTap: () {
-              Get.offAllNamed("/login");
+            onTap: () async {
+              GoogleSignIn googleSignIn = GoogleSignIn();
+              await googleSignIn.signOut(); // Sign out from Google
+              await FirebaseAuth.instance.signOut(); // Sign out from Firebase
+
+              Get.offNamed('/login');
             },
           ),
         ],
