@@ -77,8 +77,8 @@ class PatientProfilePage extends StatelessWidget {
             icon: Icons.info,
             title: 'About',
             onTap: () {
-              // Implement navigation or action for About
-            },
+              Get.toNamed("/about");
+              },
           ),
           _buildProfileOption(
             icon: Icons.logout,
