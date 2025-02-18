@@ -20,7 +20,6 @@ import 'package:hospital_managment_project/view/auth/signup.dart';
 import 'package:hospital_managment_project/view/pages/appointmentpage.dart';
 import 'package:hospital_managment_project/view/about_page.dart';
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -87,7 +86,6 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/onboarding_info', page: () => OnboardingScreenInfo()),
         GetPage(name: '/info', page: () => AccountInformationPage()),
         GetPage(name: '/about', page: () => AboutPage()),
-
       ],
     );
   }

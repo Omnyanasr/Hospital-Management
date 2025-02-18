@@ -3,26 +3,31 @@ import 'package:flutter/material.dart';
 class FamilyMemberCard extends StatelessWidget {
   final String name;
   final String role;
-  final String imagePath;
+  final String imageUrl;
 
-  const FamilyMemberCard(
-      {super.key,
-      required this.name,
-      required this.role,
-      required this.imagePath});
+  const FamilyMemberCard({
+    super.key,
+    required this.name,
+    required this.role,
+    required this.imageUrl,
+  });
 
   @override
   Widget build(BuildContext context) {
+    bool isNetworkImage = imageUrl.startsWith('http');
+
     return Column(
       children: [
         CircleAvatar(
           radius: 30,
-          backgroundImage:
-              AssetImage(imagePath), // Replace with your image asset
+          backgroundImage: isNetworkImage
+              ? NetworkImage(imageUrl) // Firestore image URL
+              : AssetImage('assets/doctor.png') as ImageProvider, // Local asset
         ),
         const SizedBox(height: 5),
-        Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
-        Text(role, style: const TextStyle(color: Colors.grey)),
+        Text(name,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+        Text(role, style: const TextStyle(color: Colors.grey, fontSize: 10)),
       ],
     );
   }

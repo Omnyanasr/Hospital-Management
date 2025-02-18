@@ -1,44 +1,56 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart'; // Ensure you have GetX for navigation
+import 'package:get/get.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hospital_managment_project/components/family_member_card.dart';
 
 class DoctorsAvailable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // List of doctors with their details
-    final List<Map<String, String>> doctors = [
-      {
-        "name": "Dr. Johnson",
-        "role": "Neurologist",
-        "imagePath": 'assets/doctor.png'
-      },
-      {
-        "name": "Dr. Ibrahim Ali",
-        "role": "Ultrasound",
-        "imagePath": 'assets/doctor.png'
-      },
-      {
-        "name": "Dr. Metwali",
-        "role": "Vascular",
-        "imagePath": 'assets/doctor.png'
-      },
-    ];
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection("doctors").snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: doctors.map((doctor) {
-        return GestureDetector(
-          onTap: () {
-            // Navigate to the appointment page with the selected doctor's name
-            Get.toNamed('/appointment', arguments: doctor['name']);
-          },
-          child: FamilyMemberCard(
-            name: doctor['name']!,
-            role: doctor['role']!,
-            imagePath: doctor['imagePath']!,
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return Center(child: Text("No doctors available"));
+        }
+
+        var doctors = snapshot.data!.docs;
+
+        return SizedBox(
+          height: 140, // Increased height for better visibility
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal, // Enables horizontal scrolling
+            child: Row(
+              children: doctors.map((doc) {
+                var data = doc.data() as Map<String, dynamic>;
+
+                return Container(
+                  width: 120, // Increased width per doctor card
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 10), // More spacing
+                  child: GestureDetector(
+                    onTap: () {
+                      Get.toNamed('/appointment',
+                          arguments: data['Doctor\'s Name']);
+                    },
+                    child: FamilyMemberCard(
+                      name: data['Doctor\'s Name'] ?? "Unknown",
+                      role: data['Specialty'] ?? "Unknown Specialty",
+                      imageUrl: data.containsKey('imageUrl') &&
+                              data['imageUrl'] != null
+                          ? data['imageUrl']
+                          : 'assets/doctor.png',
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
           ),
         );
-      }).toList(),
+      },
     );
   }
 }
