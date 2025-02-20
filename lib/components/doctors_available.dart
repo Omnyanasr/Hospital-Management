@@ -20,27 +20,31 @@ class DoctorsAvailable extends StatelessWidget {
         var doctors = snapshot.data!.docs;
 
         return SizedBox(
-          height: 140, // Increased height for better visibility
+          height: 140,
           child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal, // Enables horizontal scrolling
+            scrollDirection: Axis.horizontal,
             child: Row(
               children: doctors.map((doc) {
                 var data = doc.data() as Map<String, dynamic>;
 
                 return Container(
-                  width: 120, // Increased width per doctor card
-                  margin: const EdgeInsets.symmetric(
-                      horizontal: 10), // More spacing
+                  width: 120,
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
                   child: GestureDetector(
                     onTap: () {
-                      Get.toNamed('/appointment',
-                          arguments: data['Doctor\'s Name']);
+                      Get.toNamed('/appointment', arguments: {
+                        'doctorName': data['Doctor\'s Name'] ?? "Unknown",
+                        'specialty': data['Specialty'] ?? "Unknown Specialty",
+                        'notes': data['Additional Notes'] ?? "No additional information",
+                        'photo': data.containsKey('imageUrl') && data['imageUrl'] != null
+                            ? data['imageUrl']
+                            : 'assets/doctor.png',
+                      });
                     },
                     child: FamilyMemberCard(
                       name: data['Doctor\'s Name'] ?? "Unknown",
                       role: data['Specialty'] ?? "Unknown Specialty",
-                      imageUrl: data.containsKey('imageUrl') &&
-                              data['imageUrl'] != null
+                      imageUrl: data.containsKey('imageUrl') && data['imageUrl'] != null
                           ? data['imageUrl']
                           : 'assets/doctor.png',
                     ),

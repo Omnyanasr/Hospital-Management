@@ -3,8 +3,6 @@ import 'package:get/get.dart';
 import 'myAppointmentsPage.dart';
 import 'chatPage.dart';
 
-
-
 class AppointmentPage extends StatefulWidget {
   @override
   _AppointmentPageState createState() => _AppointmentPageState();
@@ -19,6 +17,12 @@ class _AppointmentPageState extends State<AppointmentPage> {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, dynamic> doctorData = Get.arguments ?? {};
+    final String doctorName = doctorData['doctorName'] ?? "Unknown Doctor";
+    final String specialty = doctorData['specialty'] ?? "Unknown Specialty";
+    final String notes = doctorData['notes'] ?? "No additional information available";
+    final String photo = doctorData['photo'] ?? 'assets/doctor.png';
+
     return Scaffold(
       appBar: AppBar(title: Text('Appointment')),
       body: Padding(
@@ -34,7 +38,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     image: DecorationImage(
-                      image: AssetImage('assets/doctor.png'), // Replace with your image asset
+                      image: AssetImage(photo),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -43,18 +47,14 @@ class _AppointmentPageState extends State<AppointmentPage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Dr. Irum Khan", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                    Text("Surgical Superintendent"),
-                    Text("5k Patients | 5 Years Experience"),
+                    Text(doctorName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                    Text(specialty),
+                    Text(notes, style: TextStyle(fontSize: 12, color: Colors.grey)),
                   ],
                 ),
               ],
             ),
             SizedBox(height: 20),
-            Text("Biography", style: TextStyle(fontWeight: FontWeight.bold)),
-            Text("Doctor's biography and background \ninformation goes here."),
-            SizedBox(height: 20),
-            // Date selection
             Text("Select Date", style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
             Container(
@@ -93,7 +93,6 @@ class _AppointmentPageState extends State<AppointmentPage> {
               ),
             ),
             SizedBox(height: 20),
-            // Time selection
             Text("Select Time", style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
             Container(
@@ -136,8 +135,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
               children: [
                 IconButton(
                   onPressed: () {
-                    Get.to(DoctorChatPage(doctorName: "Dr. Irum Khan"));
-
+                    Get.to(DoctorChatPage(doctorName: doctorName));
                   },
                   icon: Icon(Icons.chat),
                   iconSize: 30,
@@ -147,11 +145,11 @@ class _AppointmentPageState extends State<AppointmentPage> {
                 ElevatedButton(
                   onPressed: () {
                     Get.to(MyAppointmentsPage(), arguments: {
-                      'doctorName': "Dr. Irum Khan",
-                      'specialty': "Surgical Superintendent",
+                      'doctorName': doctorName,
+                      'specialty': specialty,
                       'time': availableTimes[selectedTimeIndex],
                       'date': availableDates[selectedDateIndex],
-                      'photo': 'assets/doctor.png', // Pass photo path
+                      'photo': photo,
                     });
                   },
                   child: Text("Book an Appointment"),

@@ -227,7 +227,7 @@ class HomeScreen extends StatelessWidget {
                                         size: 15, color: Colors.blue[800]),
                                     const SizedBox(width: 5),
                                     const Text(
-                                      "X-ray Analyzer",
+                                      "Radiology analyzer",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 11),
