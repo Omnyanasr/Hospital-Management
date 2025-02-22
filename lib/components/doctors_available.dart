@@ -33,10 +33,13 @@ class DoctorsAvailable extends StatelessWidget {
                   child: GestureDetector(
                     onTap: () {
                       Get.toNamed('/appointment', arguments: {
+                        'doctorsId': doc.id,
                         'doctorName': data['Doctor\'s Name'] ?? "Unknown",
                         'specialty': data['Specialty'] ?? "Unknown Specialty",
-                        'notes': data['Additional Notes'] ?? "No additional information",
-                        'photo': data.containsKey('imageUrl') && data['imageUrl'] != null
+                        'notes': data['Additional Notes'] ??
+                            "No additional information",
+                        'photo': data.containsKey('imageUrl') &&
+                                data['imageUrl'] != null
                             ? data['imageUrl']
                             : 'assets/doctor.png',
                       });
@@ -44,7 +47,8 @@ class DoctorsAvailable extends StatelessWidget {
                     child: FamilyMemberCard(
                       name: data['Doctor\'s Name'] ?? "Unknown",
                       role: data['Specialty'] ?? "Unknown Specialty",
-                      imageUrl: data.containsKey('imageUrl') && data['imageUrl'] != null
+                      imageUrl: data.containsKey('imageUrl') &&
+                              data['imageUrl'] != null
                           ? data['imageUrl']
                           : 'assets/doctor.png',
                     ),

@@ -34,7 +34,10 @@ class _HomePageState extends State<HomePage> {
         PopupMenuItem(
           child: ListTile(
             leading: const Icon(Icons.medical_services, color: Colors.blue),
-            title: const Text("Symptom Checker"),
+            title: const Text(
+              "Symptom Checker",
+              style: TextStyle(fontSize: 8),
+            ),
             onTap: () {
               Navigator.pop(context); // Close the menu
               Get.toNamed('/symptom');
@@ -136,7 +139,8 @@ class HomeScreen extends StatelessWidget {
                   // Google Sign-Out logic
                   GoogleSignIn googleSignIn = GoogleSignIn();
                   await googleSignIn.signOut(); // Sign out from Google
-                  await FirebaseAuth.instance.signOut(); // Sign out from Firebase
+                  await FirebaseAuth.instance
+                      .signOut(); // Sign out from Firebase
 
                   Get.offNamed('/login');
                 },
@@ -155,6 +159,7 @@ class HomeScreen extends StatelessWidget {
               // Chatbot section with image and vertical buttons
               Container(
                 padding: const EdgeInsets.all(16),
+                width: double.infinity, // Ensures full width
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   image: const DecorationImage(
@@ -240,10 +245,13 @@ class HomeScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Image.asset(
-                      'assets/robothp.png',
-                      height: 200,
-                      width: 150,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width *
+                          0.3, // Responsive width
+                      child: Image.asset(
+                        'assets/robothp.png',
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ],
                 ),
@@ -252,7 +260,15 @@ class HomeScreen extends StatelessWidget {
               const Text("Next appointments",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
-              AppointmentCard(),
+              AppointmentCard(
+                doctorName: "Dr. Johnson",
+                specialty: "Neurologist",
+                status: "Upcoming",
+                time: "10:00 - 11:00 AM",
+                date: "10 June",
+                photo: "assets/doctor.png",
+              ),
+
               const SizedBox(height: 20),
               const Text("Treatment for today",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),

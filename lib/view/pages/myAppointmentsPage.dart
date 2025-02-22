@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hospital_managment_project/components/appointment_card.dart';
 
 class MyAppointmentsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final doctorName = Get.arguments['doctorName'] ?? "Doctor";
-    final specialty = Get.arguments['specialty'] ?? "Specialty";
-    final time = Get.arguments['time'] ?? "Time";
-    final date = Get.arguments['date'] ?? "Date";
-    final photo = Get.arguments['photo'] ?? 'assets/default_photo.png';
-
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -23,33 +20,41 @@ class MyAppointmentsPage extends StatelessWidget {
             ],
           ),
         ),
-        body: TabBarView(
-          children: [
-            AppointmentListSection(
-              doctorName: doctorName,
-              specialty: specialty,
-              time: time,
-              date: date,
-              status: "Upcoming",
-              photo: photo,
-            ),
-            AppointmentListSection(
-              doctorName: doctorName,
-              specialty: specialty,
-              time: time,
-              date: date,
-              status: "Completed",
-              photo: photo,
-            ),
-            AppointmentListSection(
-              doctorName: doctorName,
-              specialty: specialty,
-              time: time,
-              date: date,
-              status: "Cancelled",
-              photo: photo,
-            ),
-          ],
+        body: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('appointments')
+              .where('patientId',
+                  isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(child: CircularProgressIndicator());
+            }
+
+            List<Map<String, dynamic>> upcoming = [];
+            List<Map<String, dynamic>> completed = [];
+            List<Map<String, dynamic>> cancelled = [];
+
+            for (var doc in snapshot.data!.docs) {
+              var data = doc.data() as Map<String, dynamic>;
+              data['id'] = doc.id;
+              if (data['status'] == "Upcoming") {
+                upcoming.add(data);
+              } else if (data['status'] == "Completed") {
+                completed.add(data);
+              } else if (data['status'] == "Cancelled") {
+                cancelled.add(data);
+              }
+            }
+
+            return TabBarView(
+              children: [
+                AppointmentListSection(appointments: upcoming),
+                AppointmentListSection(appointments: completed),
+                AppointmentListSection(appointments: cancelled),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -57,124 +62,64 @@ class MyAppointmentsPage extends StatelessWidget {
 }
 
 class AppointmentListSection extends StatelessWidget {
-  final String doctorName;
-  final String specialty;
-  final String time;
-  final String date;
-  final String status;
-  final String photo;
+  final List<Map<String, dynamic>> appointments;
 
-  AppointmentListSection({
-    required this.doctorName,
-    required this.specialty,
-    required this.time,
-    required this.date,
-    required this.status,
-    required this.photo,
-  });
+  const AppointmentListSection({super.key, required this.appointments});
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.all(16),
-      children: [
-        AppointmentCard(
-          doctorName: doctorName,
-          specialty: specialty,
-          status: status,
-          time: time,
-          date: date,
-          photo: photo,
-        ),
-      ],
-    );
-  }
-}
+    if (appointments.isEmpty) {
+      return const Center(child: Text("No appointments found."));
+    }
 
-class AppointmentCard extends StatelessWidget {
-  final String doctorName;
-  final String specialty;
-  final String status;
-  final String time;
-  final String date;
-  final String photo;
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: appointments.length,
+      itemBuilder: (context, index) {
+        var data = appointments[index];
 
-  AppointmentCard({
-    required this.doctorName,
-    required this.specialty,
-    required this.status,
-    required this.time,
-    required this.date,
-    required this.photo,
-  });
+        return AppointmentCard(
+          doctorName: data['doctorName'],
+          specialty: data['specialty'],
+          status: data['status'],
+          time: data['time'],
+          date: data['date'],
+          photo: data['photo'],
+          onCancel: () async {
+            try {
+              print("Attempting to cancel appointment with ID: ${data['id']}");
 
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            Container(
-              width: 70,
-              height: 70,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                image: DecorationImage(
-                  image: AssetImage(photo),
-                ),
-              ),
-            ),
-            SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(doctorName, style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text(specialty),
-                  Text("Date: $date"),
-                  Text("Time: $time"),
-                ],
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  status,
-                  style: TextStyle(
-                    color: status == "Cancelled" ? Colors.red : (status == "Completed" ? Colors.green : Colors.blue),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                if (status == "Upcoming")
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.blue.withOpacity(0.2), // Slightly colored background
-                      ),
-                      onPressed: () {},
-                      child: Text("Reschedule", style: TextStyle(color: Colors.blue)), // Text color
-                    ),
-                  ),
-                if (status == "Upcoming")
-                  Padding(
-                    padding: const EdgeInsets.only(top: 3.0),
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.red.withOpacity(0.2), // Slightly colored background
-                      ),
-                      onPressed: () {},
-                      child: Text("Cancel", style: TextStyle(color: Colors.red)), // Text color
-                    ),
-                  ),
-              ],
-            ),
-          ],
-        ),
-      ),
+              await FirebaseFirestore.instance
+                  .collection('appointments')
+                  .doc(data['id']) // Get the correct document
+                  .update(
+                      {'status': 'Cancelled'}); // Change status to "Cancelled"
+
+              print("Appointment moved to 'Cancelled'!");
+
+              // 🔹 Show a success message
+              Get.snackbar(
+                "Success",
+                "Appointment cancelled successfully!",
+                snackPosition: SnackPosition.BOTTOM,
+                backgroundColor: Colors.green,
+                colorText: Colors.white,
+              );
+            } catch (e) {
+              print("Error canceling appointment: $e");
+
+              // 🔹 Show an error message
+              Get.snackbar(
+                "Error",
+                "Failed to cancel appointment.",
+                snackPosition: SnackPosition.BOTTOM,
+                backgroundColor: Colors.red,
+                colorText: Colors.white,
+              );
+            }
+          },
+        );
+      },
     );
   }
 }
