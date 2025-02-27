@@ -26,8 +26,8 @@ class FamilyMemberCard extends StatelessWidget {
         ),
         const SizedBox(height: 5),
         Text(name,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-        Text(role, style: const TextStyle(color: Colors.grey, fontSize: 10)),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10)),
+        Text(role, style: const TextStyle(color: Colors.grey, fontSize: 9)),
       ],
     );
   }

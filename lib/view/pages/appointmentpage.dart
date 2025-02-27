@@ -73,6 +73,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
         'doctorId': doctorId, // Ensure doctorId is stored
         'doctorName': Get.arguments['doctorName'] ?? "Unknown Doctor",
         'specialty': Get.arguments['specialty'] ?? "Unknown Specialty",
+        'notes': Get.arguments['notes'] ?? "No additional notes",
         'date': availableDates[selectedDateIndex],
         'time': availableTimes[selectedTimeIndex],
         'photo': Get.arguments['photo'] ?? 'assets/doctor.png',
@@ -94,6 +95,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
     final String doctorName = doctorData['doctorName'] ?? "Unknown Doctor";
     final String specialty = doctorData['specialty'] ?? "Unknown Specialty";
     final String photo = doctorData['photo'] ?? 'assets/doctor.png';
+    final String notes = doctorData['notes'] ?? "No additional notes";
 
     return Scaffold(
       appBar: AppBar(title: Text('Appointment')),
@@ -103,6 +105,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   width: 90,
@@ -116,14 +119,32 @@ class _AppointmentPageState extends State<AppointmentPage> {
                   ),
                 ),
                 SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(doctorName,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        doctorName,
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18)),
-                    Text(specialty),
-                  ],
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        specialty,
+                        maxLines: 5,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        notes,
+                        style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

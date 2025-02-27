@@ -6,7 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hospital_managment_project/controller/profile_controller.dart';
 
 class PatientProfilePage extends StatelessWidget {
-  final ProfileController controller = Get.find<ProfileController>();
+  final ProfileController controller = Get.put(ProfileController());
 
   PatientProfilePage({super.key});
 
@@ -78,7 +78,7 @@ class PatientProfilePage extends StatelessWidget {
             title: 'About',
             onTap: () {
               Get.toNamed("/about");
-              },
+            },
           ),
           _buildProfileOption(
             icon: Icons.logout,

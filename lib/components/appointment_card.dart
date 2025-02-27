@@ -7,7 +7,8 @@ class AppointmentCard extends StatelessWidget {
   final String time;
   final String date;
   final String photo;
-  final VoidCallback? onCancel; // ✅ Ensure onCancel is here!
+  final VoidCallback? onCancel;
+  final bool showCancelButton; // ✅ Add this flag
 
   const AppointmentCard({
     super.key,
@@ -17,7 +18,8 @@ class AppointmentCard extends StatelessWidget {
     required this.time,
     required this.date,
     required this.photo,
-    this.onCancel, // ✅ Ensure this is optional
+    this.onCancel,
+    this.showCancelButton = true, // ✅ Default to true
   });
 
   @override
@@ -50,13 +52,13 @@ class AppointmentCard extends StatelessWidget {
                         children: [
                           const Icon(Icons.calendar_today,
                               size: 16, color: Colors.grey),
-                          const SizedBox(width: 5),
+                          const SizedBox(width: 2),
                           Text(date,
                               style: const TextStyle(color: Colors.grey)),
-                          const SizedBox(width: 10),
+                          const SizedBox(width: 5),
                           const Icon(Icons.access_time,
                               size: 16, color: Colors.grey),
-                          const SizedBox(width: 5),
+                          const SizedBox(width: 2),
                           Text(time,
                               style: const TextStyle(color: Colors.grey)),
                         ],
@@ -66,15 +68,15 @@ class AppointmentCard extends StatelessWidget {
                 ),
               ],
             ),
-            if (status ==
-                "Upcoming") // ✅ Show Cancel button only for upcoming appointments
+            if (status == "Upcoming" &&
+                showCancelButton) // ✅ Conditionally show the Cancel button
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ElevatedButton(
-                      onPressed: onCancel, // ✅ Use onCancel function
+                      onPressed: onCancel,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                         foregroundColor: Colors.white,

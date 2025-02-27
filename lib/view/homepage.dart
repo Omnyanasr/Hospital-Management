@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,6 +9,8 @@ import 'package:hospital_managment_project/components/doctors_available.dart';
 import 'package:hospital_managment_project/components/treatment_row.dart';
 import 'package:hospital_managment_project/controller/profile_controller.dart';
 import 'package:hospital_managment_project/view/account/patient_profile_page.dart';
+import 'package:hospital_managment_project/view/pages/myAppointmentsPage.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -98,13 +101,70 @@ class _HomePageState extends State<HomePage> {
 }
 
 // HomeScreen widget to display the home content
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  HomeScreen({super.key});
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final ProfileController profileController =
       Get.isRegistered<ProfileController>()
           ? Get.find<ProfileController>()
           : Get.put(ProfileController());
+  Future<Map<String, dynamic>?> _fetchSoonestAppointment() async {
+    String userId = FirebaseAuth.instance.currentUser!.uid;
 
-  HomeScreen({super.key});
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('appointments')
+        .where('patientId', isEqualTo: userId)
+        .where('status', isEqualTo: 'Upcoming')
+        .get();
+
+    if (querySnapshot.docs.isEmpty) return null;
+
+    List<Map<String, dynamic>> appointments = querySnapshot.docs
+        .map((doc) => doc.data() as Map<String, dynamic>)
+        .toList();
+
+    DateTime? parseAppointmentDate(Map<String, dynamic> appointment) {
+      try {
+        String dateStr = cleanString(appointment['date']);
+        String timeStr = cleanString(appointment['time']);
+
+        debugUnicode("Cleaned Time String", timeStr); // Debugging
+
+        // Ensure `AM/PM` is properly formatted and remove any stray spaces
+        timeStr = timeStr.replaceAll(RegExp(r'\s+'), ' ').trim();
+
+        // Validate the time format explicitly (Optional)
+        if (!timeStr.contains(RegExp(r'(AM|PM|am|pm)$'))) {
+          throw FormatException("Invalid time format: $timeStr");
+        }
+
+        // Parse date and time
+        DateTime parsedDate = DateFormat("MMMM d").parse(dateStr);
+        DateTime parsedTime = DateFormat("h:mm a").parse(timeStr); // Fix format
+
+        return DateTime(DateTime.now().year, parsedDate.month, parsedDate.day,
+            parsedTime.hour, parsedTime.minute);
+      } catch (e) {
+        print("❌ Error parsing appointment date/time: $e");
+        print("➡ Raw Date String: '${appointment['date']}'");
+        print("➡ Raw Time String: '${appointment['time']}'");
+        return null;
+      }
+    }
+
+    appointments = appointments
+        .where((appt) => parseAppointmentDate(appt) != null)
+        .toList();
+    appointments.sort(
+        (a, b) => parseAppointmentDate(a)!.compareTo(parseAppointmentDate(b)!));
+
+    return appointments.isNotEmpty ? appointments.first : null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -260,16 +320,69 @@ class HomeScreen extends StatelessWidget {
               const Text("Next appointments",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
-              AppointmentCard(
-                doctorName: "Dr. Johnson",
-                specialty: "Neurologist",
-                status: "Upcoming",
-                time: "10:00 - 11:00 AM",
-                date: "10 June",
-                photo: "assets/doctor.png",
+              FutureBuilder<Map<String, dynamic>?>(
+                future: _fetchSoonestAppointment(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (!snapshot.hasData || snapshot.data == null) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("No upcoming appointments."),
+                        const SizedBox(height: 10),
+                        ElevatedButton(
+                          onPressed: () {
+                            Get.toNamed(
+                                '/appointment'); // Navigate to appointments page
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const Text("View All Appointments"),
+                        ),
+                      ],
+                    );
+                  }
+
+                  var appointment = snapshot.data!;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppointmentCard(
+                        doctorName: appointment['doctorName'],
+                        specialty: appointment['specialty'],
+                        status: appointment['status'],
+                        time: appointment['time'],
+                        date: appointment['date'],
+                        photo:
+                            appointment['photo'] ?? 'assets/default_doctor.png',
+                        showCancelButton: false, // Keep it if needed
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight, // Align to the right
+                        child: TextButton(
+                          onPressed: () {
+                            Get.to(
+                                MyAppointmentsPage()); // Navigate to appointments page
+                          },
+                          child: const Text(
+                            "View All Appointments",
+                            style: TextStyle(
+                              color: Colors.blue, // Make text blue
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 8),
               const Text("Treatment for today",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
@@ -284,5 +397,21 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void debugUnicode(String label, String input) {
+    print("🔍 Debugging $label character by character:");
+    for (int i = 0; i < input.length; i++) {
+      print(
+          "🔹 Char ${i + 1}: '${input[i]}' (Unicode: ${input.codeUnitAt(i)})");
+    }
+  }
+
+  String cleanString(String input) {
+    return input
+        .replaceAll(RegExp(r'[\u00A0\u2007\u202F\u2009\u200A\u200B\uFEFF]'),
+            ' ') // Remove Unicode spaces
+        .replaceAll(RegExp(r'\s+'), ' ') // Normalize spaces
+        .trim();
   }
 }

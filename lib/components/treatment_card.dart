@@ -17,9 +17,13 @@ class TreatmentCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
-              Text(dosage, style: TextStyle(color: Colors.grey)),
-              Text(time, style: TextStyle(color: Colors.blue)),
+              Text(name,
+                  style:
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 12.5)),
+              SizedBox(height: 5),
+              Text(dosage, style: TextStyle(color: Colors.grey, fontSize: 11)),
+              SizedBox(height: 3),
+              Text(time, style: TextStyle(color: Colors.blue, fontSize: 13)),
             ],
           ),
         ),
