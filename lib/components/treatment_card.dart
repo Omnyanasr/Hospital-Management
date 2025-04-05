@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 class TreatmentCard extends StatelessWidget {
   final String name;
   final String dosage;
-  final String time;
 
-  TreatmentCard({required this.name, required this.dosage, required this.time});
+  TreatmentCard({required this.name, required this.dosage});
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +21,6 @@ class TreatmentCard extends StatelessWidget {
                       TextStyle(fontWeight: FontWeight.bold, fontSize: 12.5)),
               SizedBox(height: 5),
               Text(dosage, style: TextStyle(color: Colors.grey, fontSize: 11)),
-              SizedBox(height: 3),
-              Text(time, style: TextStyle(color: Colors.blue, fontSize: 13)),
             ],
           ),
         ),
