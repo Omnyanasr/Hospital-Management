@@ -383,7 +383,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
 
               const SizedBox(height: 8),
-              const Text("Treatment for today",
+              const Text("Your Treatments",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
               TreatmentRow(),
