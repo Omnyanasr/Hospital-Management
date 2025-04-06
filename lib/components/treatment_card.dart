@@ -8,7 +8,8 @@ class TreatmentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return SizedBox(
+      width: 150,
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
@@ -18,7 +19,7 @@ class TreatmentCard extends StatelessWidget {
             children: [
               Text(name,
                   style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 12.5)),
+                  TextStyle(fontWeight: FontWeight.bold, fontSize: 12.5)),
               SizedBox(height: 5),
               Text(dosage, style: TextStyle(color: Colors.grey, fontSize: 11)),
             ],
