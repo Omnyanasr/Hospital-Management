@@ -54,13 +54,14 @@ class AppointmentCard extends StatelessWidget {
                                   : Colors.red, // 🔴 For Cancelled
                         ),
                       ),
+                      Row(children: [
+                        const Icon(Icons.calendar_today,
+                            size: 16, color: Colors.grey),
+                        const SizedBox(width: 2),
+                        Text(date, style: const TextStyle(color: Colors.grey)),
+                      ]),
                       Row(
                         children: [
-                          const Icon(Icons.calendar_today,
-                              size: 16, color: Colors.grey),
-                          const SizedBox(width: 2),
-                          Text(date,
-                              style: const TextStyle(color: Colors.grey)),
                           const SizedBox(width: 5),
                           const Icon(Icons.access_time,
                               size: 16, color: Colors.grey),
