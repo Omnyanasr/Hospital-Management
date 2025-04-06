@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hospital_managment_project/components/textformfield.dart'; // Import your CustomTextForm widget
 
@@ -29,20 +30,35 @@ class _FeedbackSupportPageState extends State<FeedbackSupportPage> {
     super.dispose();
   }
 
-  void _submitFeedback() {
+  void _submitFeedback() async {
     if (_formKey.currentState!.validate()) {
-      // Add code to send this data to a backend or show a confirmation here
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Thank you for your feedback!')),
-      );
-      // Clear fields after submission
-      _nameController.clear();
-      _emailController.clear();
-      _feedbackController.clear();
-      setState(() {
-        _rating = 3; // Reset rating
-        _selectedCategory = null; // Reset selected category
-      });
+      try {
+        await FirebaseFirestore.instance.collection('feedback').add({
+          'name': _nameController.text,
+          'email': _emailController.text,
+          'category': _selectedCategory,
+          'rating': _rating,
+          'feedback': _feedbackController.text,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Thank you for your feedback!')),
+        );
+
+        _nameController.clear();
+        _emailController.clear();
+        _feedbackController.clear();
+        setState(() {
+          _rating = 3;
+          _selectedCategory = null;
+        });
+      } catch (e) {
+        print('Error submitting feedback: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to submit feedback. Try again.')),
+        );
+      }
     }
   }
 

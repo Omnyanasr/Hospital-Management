@@ -43,11 +43,17 @@ class AppointmentCard extends StatelessWidget {
                       Text(doctorName,
                           style: const TextStyle(fontWeight: FontWeight.bold)),
                       Text(specialty),
-                      Text(status,
-                          style: TextStyle(
-                              color: status == "Upcoming"
-                                  ? Colors.blue
-                                  : Colors.green)),
+                      Text(
+                        status,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: status == "Upcoming"
+                              ? Colors.blue
+                              : status == "Completed"
+                                  ? Colors.green
+                                  : Colors.red, // 🔴 For Cancelled
+                        ),
+                      ),
                       Row(
                         children: [
                           const Icon(Icons.calendar_today,
