@@ -62,7 +62,6 @@ class AppointmentCard extends StatelessWidget {
                       ]),
                       Row(
                         children: [
-                          const SizedBox(width: 5),
                           const Icon(Icons.access_time,
                               size: 16, color: Colors.grey),
                           const SizedBox(width: 2),
