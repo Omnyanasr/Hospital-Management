@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
             leading: const Icon(Icons.medical_services, color: Colors.blue),
             title: const Text(
               "Symptom Checker",
-              style: TextStyle(fontSize: 8),
+              style: TextStyle(fontSize: 12),
             ),
             onTap: () {
               Navigator.pop(context); // Close the menu
@@ -50,7 +50,10 @@ class _HomePageState extends State<HomePage> {
         PopupMenuItem(
           child: ListTile(
             leading: const Icon(Icons.image_search, color: Colors.blue),
-            title: const Text("X-ray Analyzer"),
+            title: const Text(
+              "X-ray Analyzer",
+              style: TextStyle(fontSize: 12),
+            ),
             onTap: () {
               Navigator.pop(context); // Close the menu
               Get.toNamed('/xray');
