@@ -53,6 +53,8 @@ dependencies:
   shared_preferences: ^2.3.3
   intl: 0.19.0
   table_calendar: ^3.1.2
+  http: ^1.2.2
+
 
 dev_dependencies:
   flutter_test:
@@ -109,7 +111,11 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
+  fonts:
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/Cairo-Regular.ttf
+
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

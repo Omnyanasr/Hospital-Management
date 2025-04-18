@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hospital_managment_project/components/textformfield.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class SymptomCheckerPage extends StatefulWidget {
   @override
@@ -8,24 +10,53 @@ class SymptomCheckerPage extends StatefulWidget {
 
 class _SymptomCheckerPageState extends State<SymptomCheckerPage> {
   final TextEditingController _messageController = TextEditingController();
-  final List<Map<String, dynamic>> _messages = []; // Stores chat messages
+  final List<Map<String, dynamic>> _messages = [];
 
-  void _sendSymptomMessage() {
+  void _sendSymptomMessage() async {
     if (_messageController.text.isNotEmpty) {
+      final userMessage = _messageController.text;
+
       setState(() {
         _messages.add({
-          'text': _messageController.text,
+          'text': userMessage,
           'isUser': true,
         });
         _messageController.clear();
-
-        // Simulated response from symptom checker
-        _messages.add({
-          'text':
-              'Please tell me more about your symptoms. Are you experiencing any pain?',
-          'isUser': false,
-        });
       });
+
+      try {
+        final response = await http.post(
+          Uri.parse('https://ecd6-34-125-33-130.ngrok-free.app'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({'query': userMessage}),
+        );
+
+        if (response.statusCode == 200) {
+          final responseBody = jsonDecode(utf8.decode(response.bodyBytes));
+          final botReply = responseBody['response'] ?? 'I didn’t understand that.';
+
+          setState(() {
+            _messages.add({
+              'text': botReply,
+              'isUser': false,
+            });
+          });
+        } else {
+          setState(() {
+            _messages.add({
+              'text': 'Server error. Please try again later.',
+              'isUser': false,
+            });
+          });
+        }
+      } catch (e) {
+        setState(() {
+          _messages.add({
+            'text': 'Connection error. Please check your internet or try again later.',
+            'isUser': false,
+          });
+        });
+      }
     }
   }
 
@@ -56,7 +87,10 @@ class _SymptomCheckerPageState extends State<SymptomCheckerPage> {
                           : Colors.grey[300],
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Text(message['text']),
+                    child: Text(
+                      message['text'],
+                      style: TextStyle(fontFamily: 'Cairo'), // Add this line
+                    ),
                   ),
                 );
               },
@@ -83,7 +117,7 @@ class _SymptomCheckerPageState extends State<SymptomCheckerPage> {
                 color: Colors.blue,
               ),
               mycontroller: _messageController,
-              obscureText: false, // Not obscuring text here
+              obscureText: false,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter a symptom description';
