@@ -12,7 +12,7 @@ import 'package:hospital_managment_project/view/onboarding_screen.dart';
 import 'package:hospital_managment_project/view/account/patient_profile_page.dart';
 import 'package:hospital_managment_project/view/account/account_info.dart';
 import 'package:hospital_managment_project/view/pages/symptom_chatbot_page.dart';
-import 'package:hospital_managment_project/view/pages/xray_chatbot_page.dart';
+import 'package:hospital_managment_project/view/pages/blood_analysis_page.dart';
 import 'package:hospital_managment_project/view/payment_screen.dart';
 import 'package:hospital_managment_project/view/splash_screen.dart';
 import 'package:hospital_managment_project/view/auth/login.dart';
@@ -80,7 +80,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/appointment', page: () => AppointmentPage()),
         GetPage(name: '/profile', page: () => PatientProfilePage()),
         GetPage(name: '/symptom', page: () => SymptomCheckerPage()),
-        GetPage(name: '/xray', page: () => XRayAnalyzerPage()),
+        GetPage(name: '/xray', page: () => BloodAnalysisPage()),
         GetPage(name: '/feedback', page: () => FeedbackSupportPage()),
         GetPage(name: '/payment', page: () => const PaymentScreen()),
         GetPage(name: '/onboarding_info', page: () => OnboardingScreenInfo()),

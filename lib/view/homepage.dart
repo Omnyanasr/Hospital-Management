@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
           child: ListTile(
             leading: const Icon(Icons.image_search, color: Colors.blue),
             title: const Text(
-              "X-ray Analyzer",
+              "Blood Test",
               style: TextStyle(fontSize: 12),
             ),
             onTap: () {
@@ -295,7 +295,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         size: 15, color: Colors.blue[800]),
                                     const SizedBox(width: 5),
                                     const Text(
-                                      "Radiology analyzer",
+                                      "Blood Test",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 11),
