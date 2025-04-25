@@ -13,7 +13,26 @@ class _BloodAnalysisPageState extends State<BloodAnalysisPage> {
   DateTime? selectedDate; // <-- New field for the test date
 
   final List<String> dropdownItems = [
-    // your test names...
+    'White Cell Count',
+    'Lymphocytes',
+    'Lymphocytes %',
+    'Monocytes',
+    'Monocytes %',
+    'Neutrophils',
+    'Neutrophils %',
+    'Eosinophils',
+    'Eosinophils %',
+    'Basophils',
+    'Basophils %',
+    'Red Cell Count',
+    'Hemoglobin',
+    'Hematocrit (PCV)',
+    'MCV',
+    'MCH',
+    'MCHC',
+    'RDW',
+    'Platelet Count',
+    'MPV',
   ];
 
   List<Map<String, dynamic>> selections = [
