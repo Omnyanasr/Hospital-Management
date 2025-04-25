@@ -136,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
         String dateStr = cleanString(appointment['date']);
         String timeStr = cleanString(appointment['time']);
 
-        debugUnicode("Cleaned Time String", timeStr); // Debugging
+        //debugUnicode("Cleaned Time String", timeStr); // Debugging
 
         // Ensure `AM/PM` is properly formatted and remove any stray spaces
         timeStr = timeStr.replaceAll(RegExp(r'\s+'), ' ').trim();
@@ -402,13 +402,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void debugUnicode(String label, String input) {
+  /**void debugUnicode(String label, String input) {
     print("🔍 Debugging $label character by character:");
     for (int i = 0; i < input.length; i++) {
       print(
           "🔹 Char ${i + 1}: '${input[i]}' (Unicode: ${input.codeUnitAt(i)})");
     }
-  }
+  }**/
 
   String cleanString(String input) {
     return input

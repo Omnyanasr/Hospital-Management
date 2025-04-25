@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:async';
 
 class BloodAnalysisPage extends StatefulWidget {
   @override
@@ -6,43 +9,92 @@ class BloodAnalysisPage extends StatefulWidget {
 }
 
 class _BloodAnalysisPageState extends State<BloodAnalysisPage> {
+  Map<int, Timer?> debounceTimers = {};
+  DateTime? selectedDate; // <-- New field for the test date
+
   final List<String> dropdownItems = [
-    'White Cell Count',
-    'Lymphocytes',
-    'Lymphocytes %',
-    'Monocytes',
-    'Monocytes %',
-    'Neutrophils',
-    'Neutrophils %',
-    'Eosinophils',
-    'Eosinophils %',
-    'Basophils',
-    'Basophils %',
-    'Red Cell Count',
-    'Hemoglobin',
-    'Hematocrit (PCV)',
-    'MCV',
-    'MCH',
-    'MCHC',
-    'RDW',
-    'Platelet Count',
-    'MPV',
+    // your test names...
   ];
 
   List<Map<String, dynamic>> selections = [
-    {'selected': null, 'value': ''}
+    {'selected': null, 'value': '', 'docId': null}
   ];
+
+  OutlineInputBorder roundedBorder = OutlineInputBorder(
+    borderRadius: BorderRadius.circular(12),
+    borderSide: BorderSide(color: Colors.grey),
+  );
+
+  final user = FirebaseAuth.instance.currentUser;
 
   void addDropdown() {
     setState(() {
-      selections.add({'selected': null, 'value': ''});
+      selections.add({'selected': null, 'value': '', 'docId': null});
     });
   }
 
-  void deleteDropdown(int index) {
-    setState(() {
-      selections.removeAt(index);
-    });
+  Future<void> saveOrUpdate(int index) async {
+    try {
+      if (user == null) return;
+
+      final selection = selections[index];
+
+      if (selection['selected'] == null ||
+          selection['value'].toString().isEmpty ||
+          selectedDate == null) {
+        return; // Don't save incomplete rows
+      }
+
+      final Map<String, dynamic> data = {
+        'test_name': selection['selected'],
+        'value': selection['value'],
+        'user_id': user!.uid,
+        'date': Timestamp.fromDate(selectedDate!), // Save selected date
+        'unit': '/cmm',
+      };
+
+      if (selection['docId'] == null) {
+        // Create new document
+        DocumentReference docRef = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user!.uid)
+            .collection('test_results')
+            .add(data);
+
+        setState(() {
+          selections[index]['docId'] = docRef.id;
+        });
+      } else {
+        // Update existing document
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user!.uid)
+            .collection('test_results')
+            .doc(selection['docId'])
+            .update(data);
+      }
+    } catch (e) {
+      print('Save or update failed: $e');
+    }
+  }
+
+  Future<void> selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
+
+  Future<void> deleteDropdown(int index) async {
+    // your existing delete function
   }
 
   void onAnalyze() {
@@ -57,11 +109,6 @@ class _BloodAnalysisPageState extends State<BloodAnalysisPage> {
     print('Predict clicked');
   }
 
-  OutlineInputBorder roundedBorder = OutlineInputBorder(
-    borderRadius: BorderRadius.circular(12),
-    borderSide: BorderSide(color: Colors.grey),
-  );
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,12 +117,37 @@ class _BloodAnalysisPageState extends State<BloodAnalysisPage> {
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
         child: Column(
           children: [
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => selectDate(context),
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        selectedDate == null
+                            ? 'Select Test Date'
+                            : '${selectedDate!.toLocal()}'.split(' ')[0],
+                        style: TextStyle(fontSize: 16, color: Colors.black87),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
             Expanded(
               child: ListView.builder(
                 itemCount: selections.length,
                 itemBuilder: (context, index) {
                   bool isLast = index == selections.length - 1;
                   bool canDelete = selections.length > 1;
+
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),
                     child: Row(
@@ -85,10 +157,7 @@ class _BloodAnalysisPageState extends State<BloodAnalysisPage> {
                           child: DropdownButtonFormField<String>(
                             isExpanded: true,
                             value: selections[index]['selected'],
-                            hint: Text(
-                              'Test',
-                              style: TextStyle(fontSize: 14),
-                            ),
+                            hint: Text('Test', style: TextStyle(fontSize: 14)),
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.symmetric(
                                   horizontal: 12, vertical: 4),
@@ -99,16 +168,15 @@ class _BloodAnalysisPageState extends State<BloodAnalysisPage> {
                             items: dropdownItems.map((String item) {
                               return DropdownMenuItem<String>(
                                 value: item,
-                                child: Text(
-                                  item,
-                                  style: TextStyle(fontSize: 12),
-                                ),
+                                child:
+                                    Text(item, style: TextStyle(fontSize: 12)),
                               );
                             }).toList(),
                             onChanged: (value) {
                               setState(() {
                                 selections[index]['selected'] = value;
                               });
+                              saveOrUpdate(index);
                             },
                           ),
                         ),
@@ -127,6 +195,13 @@ class _BloodAnalysisPageState extends State<BloodAnalysisPage> {
                             ),
                             onChanged: (val) {
                               selections[index]['value'] = val;
+
+                              debounceTimers[index]?.cancel();
+
+                              debounceTimers[index] =
+                                  Timer(Duration(milliseconds: 500), () {
+                                saveOrUpdate(index);
+                              });
                             },
                           ),
                         ),
@@ -197,7 +272,7 @@ class _BloodAnalysisPageState extends State<BloodAnalysisPage> {
                   ),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
