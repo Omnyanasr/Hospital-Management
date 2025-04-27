@@ -41,7 +41,7 @@ class DoctorsAvailable extends StatelessWidget {
                         'photo': data.containsKey('imageUrl') &&
                                 data['imageUrl'] != null
                             ? data['imageUrl']
-                            : 'assets/doctor.png',
+                            : 'assets/doctorr.jpg',
                       });
                     },
                     child: FamilyMemberCard(
@@ -50,7 +50,7 @@ class DoctorsAvailable extends StatelessWidget {
                       imageUrl: data.containsKey('imageUrl') &&
                               data['imageUrl'] != null
                           ? data['imageUrl']
-                          : 'assets/doctor.png',
+                          : 'assets/doctorr.jpg',
                     ),
                   ),
                 );

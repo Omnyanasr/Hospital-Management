@@ -361,7 +361,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         time: appointment['time'],
                         date: appointment['date'],
                         photo:
-                            appointment['photo'] ?? 'assets/default_doctor.png',
+                            appointment['photo'] ?? 'assets/doctorr.jpg',
                         showCancelButton: false, // Keep it if needed
                       ),
                       Align(

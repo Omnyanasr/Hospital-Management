@@ -26,7 +26,7 @@ class _SymptomCheckerPageState extends State<SymptomCheckerPage> {
 
       try {
         final response = await http.post(
-          Uri.parse('https://ecd6-34-125-33-130.ngrok-free.app'),
+          Uri.parse('https://4d2d-35-240-249-196.ngrok-free.app'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({'query': userMessage}),
         );

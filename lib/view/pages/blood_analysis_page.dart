@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:open_file/open_file.dart';
+
 
 class BloodAnalysisPage extends StatefulWidget {
   @override
@@ -10,7 +16,6 @@ class BloodAnalysisPage extends StatefulWidget {
 
 class _BloodAnalysisPageState extends State<BloodAnalysisPage> {
   Map<int, Timer?> debounceTimers = {};
-  DateTime? selectedDate; // <-- New field for the test date
 
   final List<String> dropdownItems = [
     'White Cell Count',
@@ -59,8 +64,7 @@ class _BloodAnalysisPageState extends State<BloodAnalysisPage> {
       final selection = selections[index];
 
       if (selection['selected'] == null ||
-          selection['value'].toString().isEmpty ||
-          selectedDate == null) {
+          selection['value'].toString().isEmpty) {
         return; // Don't save incomplete rows
       }
 
@@ -68,7 +72,7 @@ class _BloodAnalysisPageState extends State<BloodAnalysisPage> {
         'test_name': selection['selected'],
         'value': selection['value'],
         'user_id': user!.uid,
-        'date': Timestamp.fromDate(selectedDate!), // Save selected date
+        'date': FieldValue.serverTimestamp(),
         'unit': '/cmm',
       };
 
@@ -96,36 +100,160 @@ class _BloodAnalysisPageState extends State<BloodAnalysisPage> {
       print('Save or update failed: $e');
     }
   }
+  Future<void> generateReport(String userId) async {
+    final url = Uri.parse('https://9a24-34-125-158-142.ngrok-free.app/generate-report');
 
-  Future<void> selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({'user_id': userId}),
     );
 
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
+    if (response.statusCode == 200) {
+      final dir = await getApplicationDocumentsDirectory();
+      final file = File('${dir.path}/Medical_Report.pdf');
+      await file.writeAsBytes(response.bodyBytes);
+      print("PDF downloaded to: ${file.path}");
+      OpenFile.open(file.path);
+    } else {
+      print("Error generating report: ${response.statusCode}");
+    }
+  }
+
+  Future<void> fetchMonitoringTrends(String userId) async {
+    final String url = 'https://1912-34-125-158-142.ngrok-free.app/monitor';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'user_id': userId}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final trends = data['trends'];
+
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Monitoring Trends'),
+            content: SizedBox(
+              width: double.maxFinite,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: trends.length,
+                itemBuilder: (context, index) {
+                  final trend = trends[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                      'Test: ${trend["Test Name"]}\n'
+                          'Trend: ${trend["Trend Status"]}\n'
+                          'Current: ${trend["Current Value"]}\n'
+                          '${trend.containsKey("Past Values") ? "Past: ${trend["Past Values"]}\n" : ""}'
+                          '${trend.containsKey("Monitoring Priority") ? "Priority: ${trend["Monitoring Priority"]}" : ""}',
+                    ),
+                  );
+                },
+              ),
+            ),
+            actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text('OK'))],
+          ),
+        );
+      } else {
+        print('Error: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      print('Exception: $e');
+    }
+  }
+
+  Future<void> fetchPredictions(String userId) async {
+    final String url = 'https://d678-34-125-158-142.ngrok-free.app/predict-next';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'user_id': userId}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final predictions = data['predictions'];
+
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Predictions'),
+            content: SizedBox(
+              width: double.maxFinite,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: predictions.length,
+                itemBuilder: (context, index) {
+                  final test = predictions[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                      'Test: ${test["Test Name"]}\n'
+                          '${test.containsKey("Predicted Value (Next 30 Days)") ? "Value: ${test["Predicted Value (Next 30 Days)"]}\nDate: ${test["Prediction Date"]}" : test["Message"]}',
+                    ),
+                  );
+                },
+              ),
+            ),
+            actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text('OK'))],
+          ),
+        );
+      } else {
+        print('Error: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      print('Exception: $e');
     }
   }
 
   Future<void> deleteDropdown(int index) async {
-    // your existing delete function
+    try {
+      if (user == null) return;
+
+      final docId = selections[index]['docId'];
+
+      if (docId != null) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user!.uid)
+            .collection('test_results')
+            .doc(docId)
+            .delete();
+      }
+
+      setState(() {
+        selections.removeAt(index);
+      });
+    } catch (e) {
+      print('Delete failed: $e');
+    }
   }
 
   void onAnalyze() {
-    print('Analyze clicked');
+    if (user != null) {
+      generateReport(user!.uid);
+    }
   }
 
   void onMonitor() {
-    print('Monitor clicked');
+    if (user != null) {
+      fetchMonitoringTrends(user!.uid);
+    }
   }
 
   void onPredict() {
-    print('Predict clicked');
+    if (user != null) {
+      fetchPredictions(user!.uid);
+    }
   }
 
   @override
@@ -136,30 +264,6 @@ class _BloodAnalysisPageState extends State<BloodAnalysisPage> {
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
         child: Column(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () => selectDate(context),
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        selectedDate == null
-                            ? 'Select Test Date'
-                            : '${selectedDate!.toLocal()}'.split(' ')[0],
-                        style: TextStyle(fontSize: 16, color: Colors.black87),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
             Expanded(
               child: ListView.builder(
                 itemCount: selections.length,
@@ -176,7 +280,10 @@ class _BloodAnalysisPageState extends State<BloodAnalysisPage> {
                           child: DropdownButtonFormField<String>(
                             isExpanded: true,
                             value: selections[index]['selected'],
-                            hint: Text('Test', style: TextStyle(fontSize: 14)),
+                            hint: Text(
+                              'Test',
+                              style: TextStyle(fontSize: 14),
+                            ),
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.symmetric(
                                   horizontal: 12, vertical: 4),
@@ -187,8 +294,10 @@ class _BloodAnalysisPageState extends State<BloodAnalysisPage> {
                             items: dropdownItems.map((String item) {
                               return DropdownMenuItem<String>(
                                 value: item,
-                                child:
-                                    Text(item, style: TextStyle(fontSize: 12)),
+                                child: Text(
+                                  item,
+                                  style: TextStyle(fontSize: 12),
+                                ),
                               );
                             }).toList(),
                             onChanged: (value) {
@@ -215,12 +324,13 @@ class _BloodAnalysisPageState extends State<BloodAnalysisPage> {
                             onChanged: (val) {
                               selections[index]['value'] = val;
 
-                              debounceTimers[index]?.cancel();
+                              debounceTimers[index]
+                                  ?.cancel(); // Cancel previous timer if any
 
                               debounceTimers[index] =
                                   Timer(Duration(milliseconds: 500), () {
-                                saveOrUpdate(index);
-                              });
+                                    saveOrUpdate(index); // Save after 500ms pause
+                                  });
                             },
                           ),
                         ),
@@ -291,7 +401,7 @@ class _BloodAnalysisPageState extends State<BloodAnalysisPage> {
                   ),
                 ),
               ],
-            ),
+            )
           ],
         ),
       ),

@@ -54,6 +54,8 @@ dependencies:
   intl: 0.19.0
   table_calendar: ^3.1.2
   http: ^1.2.2
+  path_provider: ^2.0.11
+  open_file: ^3.2.1
 
 
 dev_dependencies:
@@ -81,13 +83,13 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
      - assets/animation.json
+     - assets/doctorr.jpg
      - assets/pic.json
      - assets/slide2.png
      - assets/slide32.png
      - assets/slide11.png
      - assets/facebook.webp
      - assets/google.png
-     - assets/doctor.png
      - assets/robot.png
      - assets/roboth.png
      - assets/robothp.png

@@ -76,7 +76,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
         'notes': Get.arguments['notes'] ?? "No additional notes",
         'date': availableDates[selectedDateIndex],
         'time': availableTimes[selectedTimeIndex],
-        'photo': Get.arguments['photo'] ?? 'assets/doctor.png',
+        'photo': Get.arguments['photo'] ?? 'assets/doctorr.jpg',
         'status': 'Upcoming',
         'patientId': user.uid,
         'timestamp': FieldValue.serverTimestamp(),
@@ -94,7 +94,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
     final Map<String, dynamic> doctorData = Get.arguments ?? {};
     final String doctorName = doctorData['doctorName'] ?? "Unknown Doctor";
     final String specialty = doctorData['specialty'] ?? "Unknown Specialty";
-    final String photo = doctorData['photo'] ?? 'assets/doctor.png';
+    final String photo = doctorData['photo'] ?? 'assets/doctorr.jpg';
     final String notes = doctorData['notes'] ?? "No additional notes";
 
     return Scaffold(

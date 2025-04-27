@@ -22,7 +22,7 @@ class FamilyMemberCard extends StatelessWidget {
           radius: 30,
           backgroundImage: isNetworkImage
               ? NetworkImage(imageUrl) // Firestore image URL
-              : AssetImage('assets/doctor.png') as ImageProvider, // Local asset
+              : AssetImage('assets/doctorr.jpg') as ImageProvider, // Local asset
         ),
         const SizedBox(height: 5),
         Text(name,
