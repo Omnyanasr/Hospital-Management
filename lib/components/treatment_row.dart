@@ -27,9 +27,8 @@ class TreatmentRow extends StatelessWidget {
 
       final List<dynamic> treatmentList = data['treatments'];
 
-      final List<Map<String, dynamic>> treatments = treatmentList
-          .map((item) => Map<String, dynamic>.from(item))
-          .toList();
+      final List<Map<String, dynamic>> treatments =
+          treatmentList.map((item) => Map<String, dynamic>.from(item)).toList();
 
       return treatments;
     } catch (e, stack) {
@@ -71,7 +70,8 @@ class TreatmentRow extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: TreatmentCard(
                   name: treatment['details'] ?? 'Unnamed',
-                  dosage: '1 dose / day', // Update with real dosage if needed
+                  dosage: treatment['dose'] ??
+                      '1 dose / day', // Update with real dosage if needed
                 ),
               );
             }).toList(),
