@@ -76,7 +76,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
         'notes': Get.arguments['notes'] ?? "No additional notes",
         'date': availableDates[selectedDateIndex],
         'time': availableTimes[selectedTimeIndex],
-        'photo': Get.arguments['photo'] ?? 'assets/doctorr.jpg',
+        'photo': Get.arguments['photo'] ?? 'assets/d.png',
         'status': 'Upcoming',
         'patientId': user.uid,
         'timestamp': FieldValue.serverTimestamp(),
@@ -94,7 +94,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
     final Map<String, dynamic> doctorData = Get.arguments ?? {};
     final String doctorName = doctorData['doctorName'] ?? "Unknown Doctor";
     final String specialty = doctorData['specialty'] ?? "Unknown Specialty";
-    final String photo = doctorData['photo'] ?? 'assets/doctorr.jpg';
+    final String photo = doctorData['photo'] ?? 'assets/d.png';
     final String notes = doctorData['notes'] ?? "No additional notes";
 
     return Scaffold(
@@ -171,7 +171,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                             margin: EdgeInsets.only(right: 20),
                             decoration: BoxDecoration(
                               color: selectedDateIndex == index
-                                  ? Colors.blue
+                                  ? Color(0xFF659AF7)
                                   : Colors.grey[200],
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -214,7 +214,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                             margin: EdgeInsets.only(right: 20),
                             decoration: BoxDecoration(
                               color: selectedTimeIndex == index
-                                  ? Colors.blue
+                                  ? Color(0xFF659AF7)
                                   : Colors.grey[200],
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -233,10 +233,15 @@ class _AppointmentPageState extends State<AppointmentPage> {
                       },
                     ),
                   ),
-            SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: bookAppointment,
-              child: Text("Book an Appointment"),
+            SizedBox(height: 60),
+            Center(
+              child: Container(
+                width: 250,
+                child: ElevatedButton(
+                  onPressed: bookAppointment,
+                  child: Text("Book an Appointment"),
+                ),
+              ),
             ),
           ],
         ),

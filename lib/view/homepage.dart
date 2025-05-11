@@ -194,10 +194,6 @@ class _HomeScreenState extends State<HomeScreen> {
             }),
             actions: [
               IconButton(
-                icon: const Icon(Icons.notifications, color: Colors.black),
-                onPressed: () {},
-              ),
-              IconButton(
                 onPressed: () async {
                   // Google Sign-Out logic
                   GoogleSignIn googleSignIn = GoogleSignIn();
@@ -361,7 +357,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         time: appointment['time'],
                         date: appointment['date'],
                         photo:
-                            appointment['photo'] ?? 'assets/doctorr.jpg',
+                            appointment['photo'] ?? 'assets/d.png',
                         showCancelButton: false, // Keep it if needed
                       ),
                       Align(

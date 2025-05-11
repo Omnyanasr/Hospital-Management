@@ -6,7 +6,6 @@ class AboutPage extends StatefulWidget {
 }
 
 class _AboutPageState extends State<AboutPage> {
-  // Track the expanded feature
   int? _expandedFeatureIndex;
 
   @override
@@ -15,22 +14,22 @@ class _AboutPageState extends State<AboutPage> {
       {
         "title": "Doctor Appointments",
         "description":
-        "Users can book appointments with doctors of their choice, ensuring hassle-free scheduling."
+        "Users can book or cancel appointments with doctors and easily view available doctors through the app."
       },
       {
         "title": "Chatbot Symptom Analysis",
         "description":
-        "Our intelligent chatbot allows users to describe their symptoms. Based on the input, the chatbot recommends the appropriate doctor."
+        "An intelligent chatbot helps users by analyzing their symptoms and suggesting the suitable doctor. It also provides access to the list of available doctors."
       },
       {
-        "title": "Radiology Image Analysis",
+        "title": "Blood Test Analysis",
         "description":
-        "Patients can upload radiology images to the system, which detects cancer (if present), identifies its type (e.g., benign or malignant), and highlights the affected area in the image."
+        "Users can input blood test values. The system checks if the values are normal or abnormal, suggests possible diseases, provides treatment guides, estimates time to return to normal, and recommends a retest time. It also offers health information and care guides."
       },
       {
-        "title": "Follow-Up Recommendation System",
+        "title": "Monitoring & Prediction",
         "description":
-        "Based on diagnoses, our app provides actionable follow-up suggestions, such as scheduling biopsies, referring to specialists, or implementing monitoring protocols. It also offers lifestyle recommendations and tracks patient health over time."
+        "The system monitors user health based on blood test inputs and predicts the next expected value to help in early detection and proactive care."
       },
     ];
 
@@ -57,7 +56,7 @@ class _AboutPageState extends State<AboutPage> {
               ),
               const SizedBox(height: 16),
               const Text(
-                'About Care360',
+                'About MedAssist',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -66,11 +65,10 @@ class _AboutPageState extends State<AboutPage> {
               ),
               const SizedBox(height: 16),
               const Text(
-                'We are revolutionizing healthcare with our mobile Hospital Management System. Our app is designed to provide seamless, efficient, and user-friendly healthcare services to patients. Here are the key features of our app:',
+                'MedAssist is a smart healthcare application designed to simplify and improve the patient experience. Our app offers convenient features for patients, doctors, and administrators. Here are the key features:',
                 style: TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 16),
-              // Features list
               ...features.asMap().entries.map((entry) {
                 int index = entry.key;
                 Map<String, String> feature = entry.value;
@@ -89,8 +87,8 @@ class _AboutPageState extends State<AboutPage> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.blue, // Blue text for clickable effect
-                          decoration: TextDecoration.underline, // Underline effect
+                          color: Colors.blue,
+                          decoration: TextDecoration.underline,
                         ),
                       ),
                     ),
@@ -122,7 +120,7 @@ class _AboutPageState extends State<AboutPage> {
               ),
               const SizedBox(height: 5),
               const Text(
-                'Care360 is brought to you by a dedicated team of innovators:',
+                'MedAssist is brought to you by a dedicated team of innovators:',
                 style: TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 5),

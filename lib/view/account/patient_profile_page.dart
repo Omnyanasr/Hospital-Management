@@ -53,13 +53,6 @@ class PatientProfilePage extends StatelessWidget {
             },
           ),
           _buildProfileOption(
-            icon: Icons.location_on,
-            title: 'Address',
-            onTap: () {
-              // Implement navigation or action for Address
-            },
-          ),
-          _buildProfileOption(
             icon: Icons.payment,
             title: 'Payment Method',
             onTap: () {
