@@ -68,14 +68,42 @@ class _AppointmentPageState extends State<AppointmentPage> {
       return;
     }
 
+    final selectedDate = availableDates[selectedDateIndex];
+    final selectedTime = availableTimes[selectedTimeIndex];
+
     try {
+      // 🔍 Query for same patient, same date, same time (status check later)
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('appointments')
+          .where('patientId', isEqualTo: user.uid)
+          .where('date', isEqualTo: selectedDate)
+          .where('time', isEqualTo: selectedTime)
+          .get();
+
+      // 🧠 Manually filter out cancelled appointments
+      final activeAppointments = querySnapshot.docs.where((doc) =>
+          (doc.data() as Map<String, dynamic>)['status'] != 'Cancelled');
+
+      if (activeAppointments.isNotEmpty) {
+        // ❌ Already has appointment
+        Get.snackbar(
+          "Duplicate Booking",
+          "You already have an appointment at this date and time.",
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        return;
+      }
+
+      // ✅ Safe to book
       await FirebaseFirestore.instance.collection('appointments').add({
-        'doctorId': doctorId, // Ensure doctorId is stored
+        'doctorId': doctorId,
         'doctorName': Get.arguments['doctorName'] ?? "Unknown Doctor",
         'specialty': Get.arguments['specialty'] ?? "Unknown Specialty",
         'notes': Get.arguments['notes'] ?? "No additional notes",
-        'date': availableDates[selectedDateIndex],
-        'time': availableTimes[selectedTimeIndex],
+        'date': selectedDate,
+        'time': selectedTime,
         'photo': Get.arguments['photo'] ?? 'assets/d.png',
         'status': 'Upcoming',
         'patientId': user.uid,
@@ -86,6 +114,14 @@ class _AppointmentPageState extends State<AppointmentPage> {
       Get.to(MyAppointmentsPage());
     } catch (e) {
       print("Error booking appointment: $e");
+
+      Get.snackbar(
+        "Error",
+        "Failed to book appointment.",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+      );
     }
   }
 
