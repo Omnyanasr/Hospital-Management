@@ -45,7 +45,6 @@ This is the mobile application (Flutter) for the Hospital Management System. It 
 - **Firebase Authentication** – User login and registration
 - **Cloud Firestore** – Storing appointments, test results, user data
 - **FastAPI Backend (External)** – Handles AI blood test analysis and predictions
-- **OpenAI API (Optional)** – For chatbot intelligence (if implemented)
 
 ---
 
